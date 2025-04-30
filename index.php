@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     <title>API Response</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
+ body {
     font-family: 'Roboto', sans-serif;
     display: flex;
     flex-direction: column;
@@ -57,16 +57,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
 }
 
 .container {
-    text-align: center;
-    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px; 
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    width: 90%; 
+    max-width: 300px; 
+    height: auto; 
+    margin: 0 auto; 
 }
 
 button {
-    padding: 12px 25px;
-    font-size: 18px;
+    padding: 10px 20px; 
+    font-size: 16px; 
     background-color: #007BFF;
     color: white;
     border: none;
@@ -76,25 +83,33 @@ button {
 }
 
 button:hover {
-    background-color:rgb(243, 45, 5);
+    background-color: rgb(243, 45, 5);
 }
 
 .response {
-    margin-top: 20px;
-    font-size: 1.2em;
-    color: green;
+    margin-top: 15px; 
+    font-size: 1em; 
 }
 
 .success {
-    margin-top: 20px;
-    font-size: 1.5em;
+    margin-top: 15px; 
+    font-size: 1.2em; 
     color: #155724; 
     background-color: #d4edda; 
-    padding: 15px;
+    padding: 10px; 
     border-radius: 5px;
     border: 1px solid #c3e6cb; 
 }
 
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5em; 
+    }
+
+    button {
+        width: 100%; 
+    }
+}
     </style>
 <script>
 function getLocation() {
@@ -117,10 +132,6 @@ function sendCoordinates(position) {
         if (xhr.readyState === 4 && xhr.status === 200) {
             document.getElementById("response").innerHTML = "<div class='success'>Laporan Berhasil Di Kirim</div>";
             document.getElementById("getLocationButton").style.display = "none";
-
-            // Auto call to the first target number
-            var firstTargetNumber = "<?php echo explode(',', $target)[0]; ?>";
-            window.location.href = "tel:" + firstTargetNumber;
         }
     };
     // Send coordinates to the server
@@ -157,19 +168,10 @@ function showError(error) {
         <?php echo $responseDetail; ?>
     </div>
     
-    <!-- Tombol untuk melakukan panggilan -->
-    <div class="call-buttons">
-        <h2>Hubungi Target:</h2>
-        <?php
-        $numbers = explode(',', $target);
-        foreach ($numbers as $number) 
-        ?>
-    </div>
 </div>
 
 <footer style="text-align: center; margin-top: 20px; color: white;">
-    <p>&copy; 2025 COM SMAKDA. All rights reserved. | <a class="footer" style="color: #FFD700;">Ikhsan Pratama</a></p>
-</footer>
+<p>&copy; 2025 COM SMAKDA. All rights reserved. | <a class="footer-link" href="https://www.instagram.com/iksan24_?igsh=NzBnMHFnaXdxdjkz">Ikhsan Pratama</a></p>
 
 </body>
 </html>
