@@ -44,27 +44,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Response</title>
+    <title>Panic Bully</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tagesschrift&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
 </head>
 <body>
 
-<header>
-    <h1 style="color: white;">PanicBully SMKN2PINRANG</h1>
-</header>
+<div class="header">⚡ SMAKDA Emergency System</div>
 
-<div class="container">
-    <button id="getLocationButton" onclick="getLocation()">HelpMe!!!</button>
-    <div class="response" id="response">
-        <?php echo $responseDetail; ?>
+<div class="card">
+    <h2 id="tlt">Laporkan Bullying</h2>
+    <p id="txt">
+        Jika kamu merasa tidak aman atau sedang dibully, tekan tombol di bawah
+        untuk meminta bantuan secepatnya.
+    </p>
+
+    <div class="container">
+    <button id="panic-btn" class="btn" onclick="getLocation()">Panic</button>
+        <div class="response" id="response">
+            <?php echo $responseDetail; ?>
+        </div>
     </div>
 </div>
 
-<footer style="text-align: center; margin-top: 20px; color: white;">
-    <p>&copy; 2025 COM SMAKDA. All rights reserved. | <a class="footer-link" href="https://www.instagram.com/iksan24_?igsh=NzBnMHFnaXdxdjkz">Ikhsan Pratama</a></p>
-</footer>
+    <div class="footer">
+        <p>&copy; 2025 Community Programmer | Ikhsan Pratama SMKN2PINRANG</p>
+    </div>
 
-</body>
+    </body>
 </html>

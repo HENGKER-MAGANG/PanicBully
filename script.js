@@ -16,13 +16,16 @@ function sendCoordinates(position) {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            document.getElementById("response").innerHTML = "<div class='success'>Laporan Berhasil Di Kirim</div>";
-            document.getElementById("getLocationButton").style.display = "none";
+            document.getElementById("response").innerHTML = "🚨 Bantuan sedang menuju ke lokasi Anda!";
+            document.getElementById("panic-btn").style.display = "none"; // Hide the button
+            document.getElementById("txt").style.display = "none";
+            document.getElementById("tlt").style.display = "none";
         }
     };
     // Send coordinates to the server
     xhr.send("latitude=" + latitude + "&longitude=" + longitude);
 }
+
 
 function showError(error) {
     switch(error.code) {
