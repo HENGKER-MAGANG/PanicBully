@@ -252,6 +252,9 @@
         <img src="assets/belajar.jpeg" alt="Kegiatan Belajar Mengajar">
         <img src="assets/ph.jpeg" alt="Siswa Praktik Perhotelan">
         <img src="assets/lks.jpeg" alt="Lomba Kompetensi Siswa">
+        <img src="assets/menguji-pakarwin.jpeg" alt="Menguji Di SMK Wajo">
+        <img src="assets/patriot1.jpeg" alt="Pelatihan Penerapan IoT">
+        <img src="assets/petir1.jpeg" alt="Pelatihan IoT Remaja">
         <img src="assets/lks1.jpeg" alt="Lomba Kompetensi Siswa">
         <img src="assets/lks2.jpeg" alt="Lomba Kompetensi Siswa">
         <img src="assets/praktik.jpeg" alt="Eksperimen di Laboratorium">
