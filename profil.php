@@ -252,6 +252,8 @@
         <img src="assets/belajar.jpeg" alt="Kegiatan Belajar Mengajar">
         <img src="assets/ph.jpeg" alt="Siswa Praktik Perhotelan">
         <img src="assets/lks.jpeg" alt="Lomba Kompetensi Siswa">
+        <img src="assets/lks1.jpeg" alt="Lomba Kompetensi Siswa">
+        <img src="assets/lks2.jpeg" alt="Lomba Kompetensi Siswa">
         <img src="assets/praktik.jpeg" alt="Eksperimen di Laboratorium">
         <img src="assets/mengaji.jpeg" alt="Pendidikan Karakter Siswa">
         <img src="assets/penanaman-pohon.jpeg" alt="Penanaman Pohon">
@@ -263,8 +265,9 @@
       <h2>Prestasi SMK Negeri 2 Pinrang</h2>
       <p>SMK Negeri 2 Pinrang telah berhasil meraih berbagai prestasi di tingkat provinsi dan nasional, di antaranya:</p>
       <ul>
-        <li>Juara 1 Lomba Kompetensi Siswa (LKS) Tingkat Provinsi Sulawesi Selatan</li>
-        <li>Juara 2 Lomba Kompetensi Siswa di Bidang Jaringan Komputer</li>
+        <li>Juara 3 Lomba Kompetensi Siswa (LKS) Tingkat Provinsi Sulawesi Selatan</li>
+        <li>Juara 1 Undipa Goes To School Tingkat Provinsi Sulawesi Selatan</li>
+        <li>Juara 2 Undipa Goes To School Tingkat Provinsi Sulawesi Selatan</li>
         <li>Juara 3 Lomba Keterampilan Industri</li>
         <li>Penghargaan Sekolah Berprestasi dari Dinas Pendidikan Provinsi Sulawesi Selatan</li>
       </ul>
