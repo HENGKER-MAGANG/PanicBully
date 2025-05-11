@@ -59,19 +59,62 @@ $result = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="dashboard.php"><i class="fas fa-home me-1"></i> Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="input_laporan.php"><i class="fas fa-pencil-alt me-1"></i> Input Laporan</a></li>
-          <li class="nav-item"><a class="nav-link" href="data_diagram.php"><i class="fas fa-chart-line me-1"></i> Diagram</a></li>
-          <li class="nav-item"><a class="nav-link" href="data_laporan.php"><i class="fas fa-table me-1"></i> Data</a></li>
-          <li class="nav-item"><a class="nav-link" href="input_izin.php"><i class="fas fa-pencil-alt me-1"></i> Input Izin</a></li>
-          <li class="nav-item"><a class="nav-link" href="data_izin.php"><i class="fas fa-calendar-check me-1"></i> Data Izin</a></li>
-          <li class="nav-item"><a class="nav-link" href="tambah_admin.php"><i class="fas fa-user-plus me-1"></i> Tambah Admin</a></li>
-          <li class="nav-item"><a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+          <li class="nav-item">
+            <a class="nav-link active" href="dashboard.php">
+              <i class="fas fa-home me-1"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="input_laporan.php">
+              <i class="fas fa-pencil-alt me-1"></i> Input Laporan
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="data_diagram.php">
+              <i class="fas fa-chart-line me-1"></i> Diagram
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="data_laporan.php">
+              <i class="fas fa-table me-1"></i> Data
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="izinDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-calendar-check me-1"></i> Izin
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="izinDropdown">
+              <li><a class="dropdown-item" href="input_izin.php"><i class="fas fa-pencil-alt me-1"></i> Input Izin</a></li>
+              <li><a class="dropdown-item" href="data_izin.php"><i class="fas fa-calendar-check me-1"></i> Data Izin</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user-cog me-1"></i> Admin
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+              <li><a class="dropdown-item" href="data_admin.php"><i class="fas fa-users me-1"></i> Data Admin</a></li>
+              <li><a class="dropdown-item" href="tambah_admin.php"><i class="fas fa-user-plus me-1"></i> Tambah Admin</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="satpamDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user-shield me-1"></i> Satpam
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="satpamDropdown">
+              <li><a class="dropdown-item" href="data_satpam.php"><i class="fas fa-user-shield me-1"></i> Data Satpam</a></li>
+              <li><a class="dropdown-item" href="tambah_satpam.php"><i class="fas fa-user-plus me-1"></i> Tambah Satpam</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="logout.php">
+              <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </a>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
-
   <div class="container">
     <div class="card p-4">
       <h4 class="mb-3">Data Laporan Bullying</h4>

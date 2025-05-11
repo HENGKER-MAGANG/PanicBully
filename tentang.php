@@ -163,10 +163,25 @@
       </ul>
     </section>
 
+    <section class="card-info mt-5" data-aos="fade-up" data-aos-delay="150">
+      <h2><i class="fas fa-exclamation-triangle me-2 text-danger"></i> Aturan Penggunaan "Laporkan Sekarang"</h2>
+      <p>
+        Fitur <strong>"Laporkan Sekarang"</strong> hanya digunakan untuk situasi <strong>darurat</strong> seperti perundungan yang terjadi saat ini dan mengancam keselamatan. Mohon untuk menggunakan fitur ini dengan bijak agar penanganan bisa dilakukan secara cepat dan tepat.
+      </p>
+      <ul class="info-list">
+        <li><div class="icon-circle bg-danger text-white"><i class="fas fa-ban"></i></div> Dilarang mengirim laporan palsu atau main-main</li>
+        <li><div class="icon-circle bg-danger text-white"><i class="fas fa-clock"></i></div> Hindari penggunaan fitur ini untuk kasus yang tidak mendesak</li>
+        <li><div class="icon-circle bg-danger text-white"><i class="fas fa-user-clock"></i></div> Laporkan kasus ringan melalui fitur <strong>Chat Laporan</strong></li>
+      </ul>
+      <p>
+        Jika kamu hanya ingin berdiskusi atau menyampaikan keluhan yang tidak bersifat darurat, silakan gunakan <a href="laporan.php"><strong>fitur Chat Laporan</strong></a>. Tim kami akan siap membantu dengan pendekatan yang tenang dan mendalam.
+      </p>
+    </section>
+
     <section class="card-info" data-aos="fade-up" data-aos-delay="200">
       <h2><i class="fas fa-school me-2"></i> Tentang SMKN 2 Pinrang</h2>
       <p>
-        SMK Negeri 2 Pinrang adalah institusi pendidikan vokasi terkemuka di Sulawesi Selatan. Dengan berbagai jurusan unggulan seperti TKJ, RPL, APHP, APAT, PH, Dan UPW sekolah ini terus berinovasi demi mencetak generasi unggul dan tangguh.
+        SMK Negeri 2 Pinrang adalah institusi pendidikan vokasi terkemuka di Sulawesi Selatan. Dengan berbagai jurusan unggulan seperti TKJ, RPL, APHP, APAT, PH, dan UPW, sekolah ini terus berinovasi demi mencetak generasi unggul dan tangguh.
       </p>
       <p>
         Melalui program seperti <strong>Panic Bully</strong>, SMKN 2 Pinrang menegaskan komitmennya terhadap keamanan dan kenyamanan siswa dalam belajar dan beraktivitas.

@@ -6,18 +6,58 @@ if (!isset($_SESSION['admin'])) {
 }
 
 $tahunFilter = date('Y');
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tahun'])) {
-    $tahunFilter = (int) $_POST['tahun'];
+$bulanFilter = date('n');
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['tahun'])) {
+        $tahunFilter = (int) $_POST['tahun'];
+    }
+    if (isset($_POST['bulan'])) {
+        $bulanFilter = (int) $_POST['bulan'];
+    }
 }
 
+// Data laporan per bulan
 $bulanData = array_fill(1, 12, 0);
 $result = $conn->query("SELECT MONTH(created_at) as bulan, COUNT(*) as total 
                         FROM laporan 
                         WHERE YEAR(created_at) = $tahunFilter 
                         GROUP BY MONTH(created_at)");
-
 while ($row = $result->fetch_assoc()) {
     $bulanData[(int)$row['bulan']] = (int)$row['total'];
+}
+
+// Data laporan per hari
+$laporanPerHari = [];
+$resultHarian = $conn->query("SELECT DATE(created_at) as tanggal, COUNT(*) as total 
+                              FROM laporan 
+                              WHERE YEAR(created_at) = $tahunFilter AND MONTH(created_at) = $bulanFilter 
+                              GROUP BY DATE(created_at)");
+while ($row = $resultHarian->fetch_assoc()) {
+    $laporanPerHari[$row['tanggal']] = $row['total'];
+}
+$labelsLaporanHarian = array_keys($laporanPerHari);
+$dataLaporanHarian = array_values($laporanPerHari);
+
+// Data izin siswa per hari
+$izinPerHari = [];
+$resultIzinHarian = $conn->query("SELECT DATE(tanggal) as tanggal, COUNT(*) as total 
+                              FROM izin_siswa 
+                              WHERE YEAR(tanggal) = $tahunFilter AND MONTH(tanggal) = $bulanFilter 
+                              GROUP BY DATE(tanggal)");
+while ($row = $resultIzinHarian->fetch_assoc()) {
+    $izinPerHari[$row['tanggal']] = $row['total'];
+}
+$labelsIzinHarian = array_keys($izinPerHari);
+$dataIzinHarian = array_values($izinPerHari);
+
+// Data izin siswa per bulan
+$izinBulanan = array_fill(1, 12, 0);
+$resultIzinBulanan = $conn->query("SELECT MONTH(tanggal) as bulan, COUNT(*) as total 
+                                   FROM izin_siswa 
+                                   WHERE YEAR(tanggal) = $tahunFilter 
+                                   GROUP BY MONTH(tanggal)");
+while ($row = $resultIzinBulanan->fetch_assoc()) {
+    $izinBulanan[(int)$row['bulan']] = (int)$row['total'];
 }
 ?>
 
@@ -80,15 +120,41 @@ while ($row = $result->fetch_assoc()) {
           <li class="nav-item"><a class="nav-link" href="input_laporan.php"><i class="fas fa-pencil-alt me-1"></i> Input Laporan</a></li>
           <li class="nav-item"><a class="nav-link" href="data_diagram.php"><i class="fas fa-chart-line me-1"></i> Diagram</a></li>
           <li class="nav-item"><a class="nav-link" href="data_laporan.php"><i class="fas fa-table me-1"></i> Data</a></li>
-          <li class="nav-item"><a class="nav-link" href="input_izin.php"><i class="fas fa-pencil-alt me-1"></i> Input Izin</a></li>
-          <li class="nav-item"><a class="nav-link" href="data_izin.php"><i class="fas fa-calendar-check me-1"></i> Data Izin</a></li>
-          <li class="nav-item"><a class="nav-link" href="tambah_admin.php"><i class="fas fa-user-plus me-1"></i> Tambah Admin</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="izinDropdown" data-bs-toggle="dropdown">
+              <i class="fas fa-calendar-check me-1"></i> Izin
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="izinDropdown">
+              <li><a class="dropdown-item" href="input_izin.php"><i class="fas fa-pencil-alt me-1"></i> Input Izin</a></li>
+              <li><a class="dropdown-item" href="data_izin.php"><i class="fas fa-calendar-check me-1"></i> Data Izin</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" data-bs-toggle="dropdown">
+              <i class="fas fa-user-cog me-1"></i> Admin
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="data_admin.php"><i class="fas fa-users me-1"></i> Data Admin</a></li>
+              <li><a class="dropdown-item" href="tambah_admin.php"><i class="fas fa-user-plus me-1"></i> Tambah Admin</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="satpamDropdown" data-bs-toggle="dropdown">
+              <i class="fas fa-user-shield me-1"></i> Satpam
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="data_satpam.php"><i class="fas fa-user-shield me-1"></i> Data Satpam</a></li>
+              <li><a class="dropdown-item" href="tambah_satpam.php"><i class="fas fa-user-plus me-1"></i> Tambah Satpam</a></li>
+            </ul>
+          </li>
           <li class="nav-item"><a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
         </ul>
       </div>
     </div>
   </nav>
+
   <div class="container">
+    <!-- Diagram laporan per bulan -->
     <div class="card">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0">Statistik Laporan per Bulan (<?= $tahunFilter ?>)</h5>
@@ -102,6 +168,38 @@ while ($row = $result->fetch_assoc()) {
       </div>
       <canvas id="bulanChart" height="100"></canvas>
     </div>
+
+    <!-- Diagram izin per bulan -->
+    <div class="card mt-5">
+      <h5>Data Izin Siswa per Bulan (<?= $tahunFilter ?>)</h5>
+      <canvas id="izinBulananChart" height="100"></canvas>
+    </div>
+
+    <!-- Diagram laporan per hari -->
+    <div class="card mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Laporan per Hari - <?= date('F', mktime(0,0,0,$bulanFilter,1)) ?> <?= $tahunFilter ?></h5>
+        <form method="POST" class="d-flex gap-2">
+          <select name="tahun" class="form-select" onchange="this.form.submit()">
+            <?php for ($t = date('Y'); $t >= 2022; $t--): ?>
+              <option value="<?= $t ?>" <?= $t == $tahunFilter ? 'selected' : '' ?>><?= $t ?></option>
+            <?php endfor; ?>
+          </select>
+          <select name="bulan" class="form-select" onchange="this.form.submit()">
+            <?php for ($b = 1; $b <= 12; $b++): ?>
+              <option value="<?= $b ?>" <?= $b == $bulanFilter ? 'selected' : '' ?>><?= date('F', mktime(0, 0, 0, $b, 10)) ?></option>
+            <?php endfor; ?>
+          </select>
+        </form>
+      </div>
+      <canvas id="laporanHarianChart" height="100"></canvas>
+    </div>
+
+    <!-- Diagram izin per hari -->
+    <div class="card mt-5">
+      <h5>Data Izin Siswa per Hari - <?= date('F', mktime(0,0,0,$bulanFilter,1)) ?> <?= $tahunFilter ?></h5>
+      <canvas id="izinChart" height="100"></canvas>
+    </div>
   </div>
 
   <footer>
@@ -109,7 +207,7 @@ while ($row = $result->fetch_assoc()) {
   </footer>
 
   <script>
-    const bulanChart = new Chart(document.getElementById('bulanChart').getContext('2d'), {
+    new Chart(document.getElementById('bulanChart').getContext('2d'), {
       type: 'bar',
       data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
@@ -122,16 +220,55 @@ while ($row = $result->fetch_assoc()) {
           hoverBackgroundColor: '#ffca2c'
         }]
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: true },
-          title: { display: false }
-        },
-        scales: {
-          y: { beginAtZero: true }
-        }
-      }
+      options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+
+    new Chart(document.getElementById('izinBulananChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+        datasets: [{
+          label: 'Jumlah Izin',
+          data: <?= json_encode(array_values($izinBulanan)) ?>,
+          backgroundColor: '#4bc0c0',
+          borderColor: '#26a69a',
+          borderWidth: 1,
+          hoverBackgroundColor: '#65d1d1'
+        }]
+      },
+      options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+
+    new Chart(document.getElementById('laporanHarianChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: <?= json_encode($labelsLaporanHarian) ?>,
+        datasets: [{
+          label: 'Jumlah Laporan',
+          data: <?= json_encode($dataLaporanHarian) ?>,
+          borderColor: '#ff6384',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+
+    new Chart(document.getElementById('izinChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: <?= json_encode($labelsIzinHarian) ?>,
+        datasets: [{
+          label: 'Jumlah Izin',
+          data: <?= json_encode($dataIzinHarian) ?>,
+          borderColor: '#36a2eb',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true, scales: { y: { beginAtZero: true } } }
     });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

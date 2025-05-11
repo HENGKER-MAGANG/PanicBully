@@ -187,7 +187,7 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav gap-2">
           <li class="nav-item">
-            <a class="nav-link" href="laporan.php"><i class="fas fa-clipboard me-1"></i>Data Laporan</a>
+            <a class="nav-link" href="laporan.php"><i class="fas fa-clipboard me-1"></i>kirim Pesan Laporan</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="admin/login.php"><i class="fas fa-user-shield me-1"></i>Login Admin</a>

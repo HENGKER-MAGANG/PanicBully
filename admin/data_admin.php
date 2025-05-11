@@ -5,27 +5,8 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Ambil data dari form
-    $nama_pelapor = $_POST['nama'];
-    $lokasi = $_POST['lokasi'];
-    $deskripsi = $_POST['deskripsi'];
-    $tingkat = $_POST['tingkat'];
-
-    // Query untuk menyimpan laporan ke database
-    $sql = "INSERT INTO laporan_bully (nama_pelapor, lokasi, deskripsi, tingkat, tanggal) 
-            VALUES ('$nama_pelapor', '$lokasi', '$deskripsi', '$tingkat', NOW())";
-
-    if (mysqli_query($conn, $sql)) {
-        $_SESSION['message'] = 'Laporan berhasil dikirim!';
-    } else {
-        $_SESSION['message'] = 'Gagal mengirim laporan: ' . mysqli_error($conn);
-    }
-
-    // Redirect ke halaman dashboard atau halaman laporan
-    header("Location: dashboard.php");
-    exit;
-}
+// Ambil data admin
+$data = mysqli_query($conn, "SELECT * FROM admin");
 ?>
 
 <!DOCTYPE html>
@@ -33,37 +14,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Input Laporan Bully - Panic Bully</title>
+  <title>Data Admin - Panic Bully</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f8fafc;
-      color: #333;
     }
     .navbar {
-      background: #343a40;
+      background-color: #343a40;
     }
     .navbar-brand, .nav-link {
-      color: #ffffff !important;
+      color: #fff !important;
     }
     .nav-link.active, .nav-link:hover {
       color: #ffc107 !important;
     }
-    .navbar-brand img {
-      height: 30px;
-      margin-right: 10px;
-    }
-    .card {
-      background-color: #ffffff;
+    .card-data {
       border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
       margin-top: 2rem;
-      padding: 20px;
-    }
-    .form-control, .form-select {
-      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
     }
     footer {
       margin-top: 40px;
@@ -141,41 +111,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </div>
     </div>
   </nav>
-  <div class="container">
-    <?php if (isset($_SESSION['message'])): ?>
-      <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-        <?= $_SESSION['message'] ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-      <?php unset($_SESSION['message']); ?>
-    <?php endif; ?>
 
-    <div class="card">
-      <h5 class="mb-3">Input Laporan Bully</h5>
-      <form action="input_laporan.php" method="POST">
-        <div class="mb-3">
-          <label for="nama" class="form-label">Nama Pelapor</label>
-          <input type="text" class="form-control" id="nama" name="nama" required />
-        </div>
-        <div class="mb-3">
-          <label for="lokasi" class="form-label">Lokasi Kejadian</label>
-          <input type="text" class="form-control" id="lokasi" name="lokasi" required />
-        </div>
-        <div class="mb-3">
-          <label for="deskripsi" class="form-label">Deskripsi Kejadian</label>
-          <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" required></textarea>
-        </div>
-        <div class="mb-3">
-          <label for="tingkat" class="form-label">Tingkat Kejadian</label>
-          <select class="form-select" id="tingkat" name="tingkat" required>
-            <option value="">-- Pilih Tingkat --</option>
-            <option value="rendah">Rendah</option>
-            <option value="sedang">Sedang</option>
-            <option value="tinggi">Tinggi</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-warning"><i class="fas fa-paper-plane me-1"></i> Kirim Laporan</button>
-      </form>
+  <div class="container mt-4">
+    <div class="card card-data p-4">
+      <h4 class="mb-3">Daftar Admin</h4>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table-dark text-center">
+            <tr>
+              <th>No</th>
+              <th>Username</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php $no = 1; while($row = mysqli_fetch_assoc($data)): ?>
+            <tr>
+              <td class="text-center"><?= $no++ ?></td>
+              <td><?= htmlspecialchars($row['username']) ?></td>
+              <td class="text-center">
+                <a href="hapus_admin.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus admin ini?')">
+                  <i class="fas fa-trash-alt"></i> Hapus
+                </a>
+              </td>
+            </tr>
+            <?php endwhile; ?>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 

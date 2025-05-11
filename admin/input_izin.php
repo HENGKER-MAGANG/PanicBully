@@ -6,13 +6,11 @@ if (!isset($_SESSION['admin'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Ambil data dari form
     $nama_lengkap = $_POST['nama_lengkap'];
     $kelas = $_POST['kelas'];
     $alasan_keluar = $_POST['alasan_keluar'];
-    $jam_keluar = $_POST['jam_keluar']; // Menambahkan jam keluar
+    $jam_keluar = $_POST['jam_keluar'];
 
-    // Query untuk menyimpan izin siswa ke database
     $sql = "INSERT INTO izin_siswa (nama_lengkap, kelas, alasan_keluar, jam_keluar, tanggal) 
             VALUES ('$nama_lengkap', '$kelas', '$alasan_keluar', '$jam_keluar', NOW())";
 
@@ -22,10 +20,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['message'] = 'Gagal mencatat izin: ' . mysqli_error($conn);
     }
 
-    // Redirect ke halaman dashboard atau halaman izin siswa
     header("Location: dashboard.php");
     exit;
 }
+
+$kelas_options = [
+  'X TJKT 1', 'X TJKT 2', 'X TJKT 3', 'X TJKT 4',
+  'X PPLG 1', 'X PPLG 2', 'X PPLG 3',
+  'X APHP 1', 'X APHP 2',
+  'X AP 1', 'X AP 2',
+  'X PH 1', 'X PH 2',
+  'X UPW',
+  'XI TKJ 1', 'XI TKJ 2', 'XI TKJ 3', 'XI TKJ 4',
+  'XI RPL 1', 'XI RPL 2', 'XI RPL 3',
+  'XI APHP 1', 'XI APHP 2', 'XI APHP 3',
+  'XI AP 1', 'XI AP 2', 'XI AP 3',
+  'XI PH 1', 'XI PH 2',
+  'XI UPW'
+];
 ?>
 
 <!DOCTYPE html>
@@ -85,14 +97,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="dashboard.php"><i class="fas fa-home me-1"></i> Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="input_laporan.php"><i class="fas fa-pencil-alt me-1"></i> Input Laporan</a></li>
-          <li class="nav-item"><a class="nav-link" href="data_diagram.php"><i class="fas fa-chart-line me-1"></i> Diagram</a></li>
-          <li class="nav-item"><a class="nav-link" href="data_laporan.php"><i class="fas fa-table me-1"></i> Data</a></li>
-          <li class="nav-item"><a class="nav-link" href="input_izin.php"><i class="fas fa-pencil-alt me-1"></i> Input Izin</a></li>
-          <li class="nav-item"><a class="nav-link" href="data_izin.php"><i class="fas fa-calendar-check me-1"></i> Data Izin</a></li>
-          <li class="nav-item"><a class="nav-link" href="tambah_admin.php"><i class="fas fa-user-plus me-1"></i> Tambah Admin</a></li>
-          <li class="nav-item"><a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+          <li class="nav-item">
+            <a class="nav-link active" href="dashboard.php">
+              <i class="fas fa-home me-1"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="input_laporan.php">
+              <i class="fas fa-pencil-alt me-1"></i> Input Laporan
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="data_diagram.php">
+              <i class="fas fa-chart-line me-1"></i> Diagram
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="data_laporan.php">
+              <i class="fas fa-table me-1"></i> Data
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="izinDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-calendar-check me-1"></i> Izin
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="izinDropdown">
+              <li><a class="dropdown-item" href="input_izin.php"><i class="fas fa-pencil-alt me-1"></i> Input Izin</a></li>
+              <li><a class="dropdown-item" href="data_izin.php"><i class="fas fa-calendar-check me-1"></i> Data Izin</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user-cog me-1"></i> Admin
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+              <li><a class="dropdown-item" href="data_admin.php"><i class="fas fa-users me-1"></i> Data Admin</a></li>
+              <li><a class="dropdown-item" href="tambah_admin.php"><i class="fas fa-user-plus me-1"></i> Tambah Admin</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="logout.php">
+              <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -116,7 +163,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
         <div class="mb-3">
           <label for="kelas" class="form-label">Kelas</label>
-          <input type="text" class="form-control" id="kelas" name="kelas" required />
+          <select class="form-select" id="kelas" name="kelas" required>
+            <option value="" selected disabled>Pilih Kelas</option>
+            <?php foreach ($kelas_options as $k): ?>
+              <option value="<?= $k ?>"><?= $k ?></option>
+            <?php endforeach; ?>
+          </select>
         </div>
         <div class="mb-3">
           <label for="alasan_keluar" class="form-label">Alasan Keluar</label>
