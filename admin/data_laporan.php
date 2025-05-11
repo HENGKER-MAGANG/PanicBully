@@ -5,8 +5,25 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-// Ambil data laporan dari database
-$result = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC");
+// Ambil filter dari GET
+$filter_tingkat = isset($_GET['tingkat']) ? $_GET['tingkat'] : '';
+$cari_nama = isset($_GET['cari_nama']) ? $_GET['cari_nama'] : '';
+
+// Query dasar
+$query = "SELECT * FROM laporan_bully WHERE 1=1";
+
+// Tambahkan filter tingkat jika dipilih
+if (!empty($filter_tingkat)) {
+    $query .= " AND tingkat = '" . mysqli_real_escape_string($conn, $filter_tingkat) . "'";
+}
+
+// Tambahkan pencarian nama jika diisi
+if (!empty($cari_nama)) {
+    $query .= " AND nama LIKE '%" . mysqli_real_escape_string($conn, $cari_nama) . "%'";
+}
+
+$query .= " ORDER BY tanggal DESC";
+$result = mysqli_query($conn, $query);
 ?>
 
 <!DOCTYPE html>
@@ -59,35 +76,10 @@ $result = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="dashboard.php">
-              <i class="fas fa-home me-1"></i> Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="input_laporan.php">
-              <i class="fas fa-pencil-alt me-1"></i> Input Laporan
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="data_diagram.php">
-              <i class="fas fa-chart-line me-1"></i> Diagram
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="data_laporan.php">
-              <i class="fas fa-table me-1"></i> Data
-            </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="izinDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fas fa-calendar-check me-1"></i> Izin
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="izinDropdown">
-              <li><a class="dropdown-item" href="input_izin.php"><i class="fas fa-pencil-alt me-1"></i> Input Izin</a></li>
-              <li><a class="dropdown-item" href="data_izin.php"><i class="fas fa-calendar-check me-1"></i> Data Izin</a></li>
-            </ul>
-          </li>
+          <li class="nav-item"><a class="nav-link active" href="dashboard.php"><i class="fas fa-home me-1"></i> Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="input_laporan.php"><i class="fas fa-pencil-alt me-1"></i> Input Laporan</a></li>
+          <li class="nav-item"><a class="nav-link" href="data_diagram.php"><i class="fas fa-chart-line me-1"></i> Diagram</a></li>
+          <li class="nav-item"><a class="nav-link" href="data_laporan.php"><i class="fas fa-table me-1"></i> Data</a></li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fas fa-user-cog me-1"></i> Admin
@@ -97,42 +89,38 @@ $result = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC
               <li><a class="dropdown-item" href="tambah_admin.php"><i class="fas fa-user-plus me-1"></i> Tambah Admin</a></li>
             </ul>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="satpamDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fas fa-user-shield me-1"></i> Satpam
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="satpamDropdown">
-              <li><a class="dropdown-item" href="data_satpam.php"><i class="fas fa-user-shield me-1"></i> Data Satpam</a></li>
-              <li><a class="dropdown-item" href="tambah_satpam.php"><i class="fas fa-user-plus me-1"></i> Tambah Satpam</a></li>
-            </ul>
-          </li>
           <li class="nav-item">
-            <a class="nav-link" href="logout.php">
-              <i class="fas fa-sign-out-alt me-1"></i> Logout
-            </a>
+            <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
+
   <div class="container">
     <div class="card p-4">
       <h4 class="mb-3">Data Laporan Bullying</h4>
 
-      <!-- Filter Export -->
-      <form class="row row-cols-lg-auto g-3 align-items-end mb-3" method="GET" action="export_excel.php">
-        <div class="col-12">
-          <label for="tanggal_dari" class="form-label">Dari Tanggal</label>
-          <input type="date" name="tanggal_dari" id="tanggal_dari" class="form-control" required>
+      <!-- Filter dan pencarian -->
+      <form class="row g-3 align-items-end mb-4" method="GET">
+        <div class="col-md-3">
+          <label for="tingkat" class="form-label">Filter Tingkat</label>
+          <select name="tingkat" id="tingkat" class="form-select">
+            <option value="">Semua</option>
+            <option value="rendah" <?= $filter_tingkat == 'rendah' ? 'selected' : '' ?>>Rendah</option>
+            <option value="sedang" <?= $filter_tingkat == 'sedang' ? 'selected' : '' ?>>Sedang</option>
+            <option value="tinggi" <?= $filter_tingkat == 'tinggi' ? 'selected' : '' ?>>Tinggi</option>
+          </select>
         </div>
-        <div class="col-12">
-          <label for="tanggal_sampai" class="form-label">Sampai Tanggal</label>
-          <input type="date" name="tanggal_sampai" id="tanggal_sampai" class="form-control" required>
+        <div class="col-md-4">
+          <label for="cari_nama" class="form-label">Cari Nama</label>
+          <input type="text" name="cari_nama" id="cari_nama" class="form-control" value="<?= htmlspecialchars($cari_nama) ?>" placeholder="Masukkan nama pelapor">
         </div>
-        <div class="col-12">
-          <button type="submit" class="btn btn-success">
-            <i class="fas fa-file-excel"></i> Export Data
-          </button>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Cari</button>
+        </div>
+        <div class="col-md-2">
+          <a href="data_laporan.php" class="btn btn-secondary w-100"><i class="fas fa-sync-alt"></i> Reset</a>
         </div>
       </form>
 
@@ -155,7 +143,7 @@ $result = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC
               <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
                 <tr>
                   <td><?= $no++ ?></td>
-                  <td><?= htmlspecialchars($row['nama_pelapor']) ?></td>
+                  <td><?= htmlspecialchars($row['nama']) ?: 'Anonim' ?></td>
                   <td><?= htmlspecialchars($row['lokasi']) ?></td>
                   <td><?= htmlspecialchars($row['deskripsi']) ?></td>
                   <td class="text-capitalize"><?= $row['tingkat'] ?></td>
@@ -168,7 +156,7 @@ $result = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC
                 </tr>
               <?php endwhile; ?>
             <?php else: ?>
-              <tr><td colspan="7" class="text-center">Belum ada laporan</td></tr>
+              <tr><td colspan="7" class="text-center">Tidak ada data sesuai pencarian.</td></tr>
             <?php endif; ?>
           </tbody>
         </table>
@@ -181,9 +169,5 @@ $result = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el))
-  </script>
 </body>
 </html>

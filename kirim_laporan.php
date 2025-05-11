@@ -1,34 +1,46 @@
 <?php
-// Pastikan ini dipanggil lewat POST
+// Koneksi ke database
+$conn = new mysqli("localhost", "root", "", "panicbully");
+
+// Cek koneksi
+if ($conn->connect_error) {
+    die("Koneksi gagal: " . $conn->connect_error);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ambil data dari form
-    $nama     = htmlspecialchars($_POST['nama'] ?? '');
-    $lokasi   = htmlspecialchars($_POST['lokasi'] ?? '');
+    $nama      = htmlspecialchars($_POST['nama'] ?? '');
+    $lokasi    = htmlspecialchars($_POST['lokasi'] ?? '');
     $deskripsi = htmlspecialchars($_POST['deskripsi'] ?? '');
-    $tingkat  = htmlspecialchars($_POST['tingkat'] ?? '');
+    $tingkat   = htmlspecialchars($_POST['tingkat'] ?? '');
 
     // Validasi dasar
     if (empty($lokasi) || empty($deskripsi) || empty($tingkat)) {
         die('Data tidak lengkap.');
     }
 
-    // Simpan ke database atau file (contoh: simpan ke file)
-    $data = [
-        'waktu'     => date('Y-m-d H:i:s'),
-        'nama'      => $nama ?: 'Anonim',
-        'lokasi'    => $lokasi,
-        'deskripsi' => $deskripsi,
-        'tingkat'   => ucfirst($tingkat)
-    ];
+    // Gunakan "Anonim" jika nama kosong
+    $nama = $nama ?: 'Anonim';
 
-    $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-    file_put_contents('laporan/laporan_' . time() . '.json', $jsonData);
+    // Siapkan query insert
+    $stmt = $conn->prepare("INSERT INTO laporan_bully (nama, lokasi, deskripsi, tingkat, tanggal) VALUES (?, ?, ?, ?, NOW())");
+    $stmt->bind_param("ssss", $nama, $lokasi, $deskripsi, $tingkat);
 
-    // Redirect ke halaman sukses
-    header("Location: laporan_berhasil.php");
-    exit();
+    // Eksekusi dan cek hasil
+    if ($stmt->execute()) {
+        // Redirect ke halaman sukses
+        header("Location: laporan_berhasil.php");
+        exit();
+    } else {
+        echo "Gagal menyimpan laporan: " . $stmt->error;
+    }
+
+    $stmt->close();
 } else {
     // Jika tidak melalui POST
-    header("Location: form_laporan.php");
+    header("Location: laporan.php");
     exit();
 }
+
+$conn->close();
+?>

@@ -7,9 +7,7 @@ if (!isset($_SESSION['admin'])) {
 
 // Ambil statistik
 $totalLaporan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM laporan_bully"))['total'];
-$totalIzin = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM izin_siswa"))['total'];
 $totalAdmin = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM admin"))['total'];
-$totalSatpam = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM satpam"))['total'];
 
 // Ambil 5 laporan terbaru
 $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC LIMIT 5");
@@ -45,14 +43,8 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
     .summary-laporan {
       background: #007bff;
     }
-    .summary-izin {
-      background: #28a745;
-    }
     .summary-admin {
       background: #ffc107;
-    }
-    .summary-satpam {
-      background: #17a2b8;
     }
     .card-data {
       border-radius: 15px;
@@ -100,30 +92,12 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
           <li class="nav-item"><a class="nav-link" href="data_diagram.php"><i class="fas fa-chart-line me-1"></i> Diagram</a></li>
           <li class="nav-item"><a class="nav-link" href="data_laporan.php"><i class="fas fa-table me-1"></i> Data</a></li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="izinDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fas fa-calendar-check me-1"></i> Izin
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="izinDropdown">
-              <li><a class="dropdown-item" href="input_izin.php"><i class="fas fa-pencil-alt me-1"></i> Input Izin</a></li>
-              <li><a class="dropdown-item" href="data_izin.php"><i class="fas fa-calendar-check me-1"></i> Data Izin</a></li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fas fa-user-cog me-1"></i> Admin
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
               <li><a class="dropdown-item" href="data_admin.php"><i class="fas fa-users me-1"></i> Data Admin</a></li>
               <li><a class="dropdown-item" href="tambah_admin.php"><i class="fas fa-user-plus me-1"></i> Tambah Admin</a></li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="satpamDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fas fa-user-shield me-1"></i> Satpam
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="satpamDropdown">
-              <li><a class="dropdown-item" href="data_satpam.php"><i class="fas fa-user-shield me-1"></i> Data Satpam</a></li>
-              <li><a class="dropdown-item" href="tambah_satpam.php"><i class="fas fa-user-plus me-1"></i> Tambah Satpam</a></li>
             </ul>
           </li>
           <li class="nav-item">
@@ -136,28 +110,16 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
 
   <div class="container mt-4">
     <div class="row g-4">
-      <div class="col-md-3">
+      <div class="col-md-6">
         <div class="card-summary summary-laporan">
           <h5><i class="fas fa-bullhorn me-2"></i>Total Laporan Bullying</h5>
           <h2><?= $totalLaporan ?></h2>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="card-summary summary-izin">
-          <h5><i class="fas fa-user-check me-2"></i>Total Data Izin</h5>
-          <h2><?= $totalIzin ?></h2>
-        </div>
-      </div>
-      <div class="col-md-3">
+      <div class="col-md-6">
         <div class="card-summary summary-admin">
           <h5><i class="fas fa-users me-2"></i>Total Admin</h5>
           <h2><?= $totalAdmin ?></h2>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card-summary summary-satpam">
-          <h5><i class="fas fa-user-shield me-2"></i>Total Satpam</h5>
-          <h2><?= $totalSatpam ?></h2>
         </div>
       </div>
     </div>
@@ -179,7 +141,7 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
             <?php $no = 1; while ($row = mysqli_fetch_assoc($laporanTerbaru)): ?>
               <tr>
                 <td><?= $no++ ?></td>
-                <td><?= htmlspecialchars($row['nama_pelapor']) ?></td>
+                <td><?= htmlspecialchars($row['nama']) ?></td>
                 <td><?= htmlspecialchars($row['lokasi']) ?></td>
                 <td class="text-capitalize"><?= $row['tingkat'] ?></td>
                 <td><?= date('d-m-Y H:i', strtotime($row['tanggal'])) ?></td>

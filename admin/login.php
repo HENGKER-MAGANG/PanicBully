@@ -106,7 +106,6 @@ if (isset($_POST['login'])) {
       <button type="submit" name="login" class="btn btn-custom">Login</button>
     </form>
     <a href="../index.php" class="btn-back"><i class="fas fa-arrow-left"></i> Kembali ke Beranda</a><br>
-    <a href="../satpam/login_satpam.php" class="btn-back"><i class="fas fa-user-shield"></i> Login sebagai Satpam</a>
   </div>
 </body>
 </html>
