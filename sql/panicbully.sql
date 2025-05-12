@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2025 at 01:55 PM
+-- Generation Time: May 12, 2025 at 10:37 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -85,7 +85,8 @@ CREATE TABLE `laporan_bully` (
 
 INSERT INTO `laporan_bully` (`id`, `nama`, `lokasi`, `deskripsi`, `tingkat`, `tanggal`) VALUES
 (1, 'Userr', 'gg', 'test', 'sedang', '2025-05-11 19:46:38'),
-(2, 'Ikhsan, S.Kom,', 'SMKN 2 PINRANG', 'test', 'rendah', '2025-05-11 19:54:26');
+(2, 'Ikhsan, S.Kom,', 'SMKN 2 PINRANG', 'test', 'rendah', '2025-05-11 19:54:26'),
+(3, 'Airil', 'SMKN 2 PINRANG', 'tst', 'rendah', '2025-05-12 16:32:52');
 
 --
 -- Indexes for dumped tables
@@ -117,7 +118,7 @@ ALTER TABLE `laporan_bully`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `laporan`
@@ -129,7 +130,7 @@ ALTER TABLE `laporan`
 -- AUTO_INCREMENT for table `laporan_bully`
 --
 ALTER TABLE `laporan_bully`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

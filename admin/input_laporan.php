@@ -7,14 +7,14 @@ if (!isset($_SESSION['admin'])) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Ambil data dari form
-    $nama_pelapor = $_POST['nama'];
+    $nama = $_POST['nama'];
     $lokasi = $_POST['lokasi'];
     $deskripsi = $_POST['deskripsi'];
     $tingkat = $_POST['tingkat'];
 
     // Query untuk menyimpan laporan ke database
-    $sql = "INSERT INTO laporan_bully (nama_pelapor, lokasi, deskripsi, tingkat, tanggal) 
-            VALUES ('$nama_pelapor', '$lokasi', '$deskripsi', '$tingkat', NOW())";
+    $sql = "INSERT INTO laporan_bully (nama, lokasi, deskripsi, tingkat, tanggal) 
+            VALUES ('$nama', '$lokasi', '$deskripsi', '$tingkat', NOW())";
 
     if (mysqli_query($conn, $sql)) {
         $_SESSION['message'] = 'Laporan berhasil dikirim!';
@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="id">
