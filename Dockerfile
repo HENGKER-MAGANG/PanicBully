@@ -4,8 +4,9 @@ FROM php:8.2-apache
 # Aktifkan mod_rewrite (jika suatu saat pakai .htaccess atau routing URL)
 RUN a2enmod rewrite
 
-# Salin semua file project ke folder web Apache
-COPY . /var/www/html/
+# Salin semua file project ke folderadmin assets sql config.php docker-compose.yml Dockerfile edukasi.php index.php kirim_laporan.php laporan_berhasil.php laporan.php profil.php README.md report.php script.js tentang.php web Apache
+COPY . /var/www/html/PanicBully1/
+
 
 # Ubah permission (opsional, supaya Apache bisa akses file)
 RUN chown -R www-data:www-data /var/www/html
