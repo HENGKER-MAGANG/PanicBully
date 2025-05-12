@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8888:80"
     volumes:
@@ -13,16 +15,16 @@ services:
       - db
 
   db:
-    image: mariadb:10.4
+    image: mariadb:10.5
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: panicbully2025!
-      MYSQL_DATABASE: panicbully
-      MYSQL_USER: root
-      MYSQL_PASSWORD: panicbully2025!
+      MYSQL_ROOT_PASSWORD: rootpass123
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
     volumes:
       - db_data:/var/lib/mysql
-      - ./panicbully.sql:/docker-entrypoint-initdb.d/panicbully.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   db_data:
