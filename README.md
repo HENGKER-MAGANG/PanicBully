@@ -48,7 +48,7 @@
 
 3. **Jalankan project di localhost**
    - Gunakan XAMPP / Laragon / Localhost Server lainnya
-   - Akses via `http://localhost/panic-bully/`
+   - Akses via `http://localhost/PanicBully/`
 
 ---
 
