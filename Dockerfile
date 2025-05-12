@@ -5,8 +5,7 @@ FROM php:8.2-apache
 RUN a2enmod rewrite
 
 # Salin semua file project ke folderadmin assets sql config.php docker-compose.yml Dockerfile edukasi.php index.php kirim_laporan.php laporan_berhasil.php laporan.php profil.php README.md report.php script.js tentang.php web Apache
-COPY . /var/www/html/PanicBully1/
-
+COPY . /var/www/html/
 
 # Ubah permission (opsional, supaya Apache bisa akses file)
 RUN chown -R www-data:www-data /var/www/html
