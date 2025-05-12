@@ -157,6 +157,9 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
     <i class="fas fa-bell"></i> Laporan Baru Masuk!
   </div>
 
+  <!-- Tambahkan elemen audio untuk suara notifikasi -->
+  <audio id="notifSound" src="../assets/audio/notif.wav" preload="auto"></audio>
+
   <footer>
     <p>&copy; <?= date('Y') ?> Panic Bully Admin Dashboard</p>
   </footer>
@@ -165,6 +168,8 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
   <script>
     function showNotif() {
       const notif = document.getElementById('notif-icon');
+      const sound = document.getElementById('notifSound');
+      sound.play(); // Putar suara saat notifikasi muncul
       notif.style.display = 'block';
       notif.classList.add('animate__animated', 'animate__fadeInDown');
 
