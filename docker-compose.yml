@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8081:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=panicbully
+      - DB_USER=panicuser
+      - DB_PASS=panicbully2025!
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: panicbully2025!
+      MYSQL_DATABASE: panicbully
+      MYSQL_USER: panicuser
+      MYSQL_PASSWORD: panicbully2025!
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+
+volumes:
+  dbdata:

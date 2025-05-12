@@ -5,11 +5,9 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-// Ambil statistik
 $totalLaporan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM laporan_bully"))['total'];
 $totalAdmin = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM admin"))['total'];
 
-// Ambil 5 laporan terbaru
 $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC LIMIT 5");
 ?>
 
@@ -23,56 +21,22 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
-    body {
-      background-color: #f8fafc;
-    }
-    .navbar {
-      background-color: #343a40;
-    }
-    .navbar-brand, .nav-link {
-      color: #fff !important;
-    }
-    .nav-link.active, .nav-link:hover {
-      color: #ffc107 !important;
-    }
-    .card-summary {
-      border-radius: 15px;
-      padding: 20px;
-      color: #fff;
-    }
-    .summary-laporan {
-      background: #007bff;
-    }
-    .summary-admin {
-      background: #ffc107;
-    }
-    .card-data {
-      border-radius: 15px;
-      margin-top: 2rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-    footer {
-      margin-top: 40px;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
+    body { background-color: #f8fafc; }
+    .navbar { background-color: #343a40; }
+    .navbar-brand, .nav-link { color: #fff !important; }
+    .nav-link.active, .nav-link:hover { color: #ffc107 !important; }
+    .card-summary { border-radius: 15px; padding: 20px; color: #fff; }
+    .summary-laporan { background: #007bff; }
+    .summary-admin { background: #ffc107; }
+    .card-data { border-radius: 15px; margin-top: 2rem; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+    footer { margin-top: 40px; text-align: center; font-size: 0.9rem; color: #aaa; }
     #notif-icon {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #dc3545;
-      color: #fff;
-      padding: 12px 18px;
-      border-radius: 50px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      font-weight: bold;
-      display: none;
-      z-index: 9999;
+      position: fixed; bottom: 30px; right: 30px;
+      background: #dc3545; color: #fff; padding: 12px 18px;
+      border-radius: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-weight: bold; display: none; z-index: 9999;
     }
-    #notif-icon i {
-      margin-right: 8px;
-    }
+    #notif-icon i { margin-right: 8px; }
   </style>
 </head>
 <body>
@@ -100,9 +64,7 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
               <li><a class="dropdown-item" href="tambah_admin.php"><i class="fas fa-user-plus me-1"></i> Tambah Admin</a></li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
         </ul>
       </div>
     </div>
@@ -137,7 +99,7 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
               <th>Tanggal</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="laporanTerbaruBody">
             <?php $no = 1; while ($row = mysqli_fetch_assoc($laporanTerbaru)): ?>
               <tr>
                 <td><?= $no++ ?></td>
@@ -156,8 +118,6 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
   <div id="notif-icon">
     <i class="fas fa-bell"></i> Laporan Baru Masuk!
   </div>
-
-  <!-- Tambahkan elemen audio untuk suara notifikasi -->
   <audio id="notifSound" src="../assets/audio/notif.wav" preload="auto"></audio>
 
   <footer>
@@ -166,12 +126,16 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    const notif = document.getElementById('notif-icon');
+    const sound = document.getElementById('notifSound');
+    let lastTotal = <?= $totalLaporan ?>;
+    let originalTitle = document.title;
+
     function showNotif() {
-      const notif = document.getElementById('notif-icon');
-      const sound = document.getElementById('notifSound');
-      sound.play(); // Putar suara saat notifikasi muncul
+      sound.play();
       notif.style.display = 'block';
       notif.classList.add('animate__animated', 'animate__fadeInDown');
+      document.title = "🔔 Laporan Baru! | Panic Bully";
 
       setTimeout(() => {
         notif.classList.remove('animate__fadeInDown');
@@ -179,19 +143,30 @@ $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tang
         setTimeout(() => {
           notif.style.display = 'none';
           notif.classList.remove('animate__fadeOutUp');
+          document.title = originalTitle;
         }, 1000);
       }, 4000);
+    }
+
+    function updateTable() {
+      fetch('get_laporan_terbaru.php')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('laporanTerbaruBody').innerHTML = html;
+        });
     }
 
     setInterval(() => {
       fetch('cek_laporan_baru.php')
         .then(res => res.json())
         .then(data => {
-          if (data.baru) {
+          if (data.total > lastTotal) {
+            lastTotal = data.total;
             showNotif();
+            updateTable();
           }
         });
-    }, 10000);
+    }, 5000);
   </script>
 </body>
 </html>

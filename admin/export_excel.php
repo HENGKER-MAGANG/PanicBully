@@ -1,40 +1,43 @@
 <?php
 include '../config.php';
 
-if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
-    exit;
+header("Content-Type: application/vnd.ms-excel");
+header("Content-Disposition: attachment; filename=laporan_bullying_" . date("Y-m-d") . ".xls");
+
+$filter_tingkat = isset($_GET['tingkat']) ? $_GET['tingkat'] : '';
+$cari_nama = isset($_GET['cari_nama']) ? $_GET['cari_nama'] : '';
+
+$query = "SELECT * FROM laporan_bully WHERE 1=1";
+if (!empty($filter_tingkat)) {
+    $query .= " AND tingkat = '" . mysqli_real_escape_string($conn, $filter_tingkat) . "'";
 }
-
-// Set header untuk download file Excel
-header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
-header("Content-Disposition: attachment; filename=laporan_bullying.xls");
-header("Pragma: no-cache");
-header("Expires: 0");
-
-// Tambahkan BOM UTF-8 agar Excel bisa mengenali karakter non-ASCII
-echo "\xEF\xBB\xBF";
-
-// Header kolom
-echo "No\tNama Pelapor\tLokasi\tDeskripsi\tTingkat\tTanggal\n";
-
-// Ambil data dari tabel laporan_bully
-$laporan = $conn->query("SELECT * FROM laporan_bully ORDER BY tanggal DESC");
-$no = 1;
-
-while ($row = $laporan->fetch_assoc()) {
-    echo $no++ . "\t" .
-         $row['nama_pelapor'] . "\t" .
-         $row['lokasi'] . "\t" .
-         str_replace(["\t", "\n", "\r"], ' ', $row['deskripsi']) . "\t" .
-         ucfirst($row['tingkat']) . "\t" .
-         date('d-m-Y H:i', strtotime($row['tanggal'])) . "\n";
+if (!empty($cari_nama)) {
+    $query .= " AND nama LIKE '%" . mysqli_real_escape_string($conn, $cari_nama) . "%'";
 }
-
-$tanggal_dari = $_GET['tanggal_dari'];
-$tanggal_sampai = $_GET['tanggal_sampai'];
-
-$query = "SELECT * FROM laporan_bully WHERE tanggal BETWEEN '$tanggal_dari 00:00:00' AND '$tanggal_sampai 23:59:59'";
+$query .= " ORDER BY tanggal DESC";
 $result = mysqli_query($conn, $query);
 
+echo "<table border='1'>";
+echo "<tr>
+        <th>No</th>
+        <th>Nama Pelapor</th>
+        <th>Lokasi</th>
+        <th>Deskripsi</th>
+        <th>Tingkat</th>
+        <th>Tanggal</th>
+      </tr>";
+
+$no = 1;
+while ($row = mysqli_fetch_assoc($result)) {
+    echo "<tr>
+            <td>{$no}</td>
+            <td>" . htmlspecialchars($row['nama'] ?: 'Anonim') . "</td>
+            <td>" . htmlspecialchars($row['lokasi']) . "</td>
+            <td>" . htmlspecialchars($row['deskripsi']) . "</td>
+            <td>" . ucfirst($row['tingkat']) . "</td>
+            <td>" . date('d-m-Y H:i', strtotime($row['tanggal'])) . "</td>
+          </tr>";
+    $no++;
+}
+echo "</table>";
 ?>
