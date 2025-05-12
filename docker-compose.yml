@@ -3,31 +3,26 @@ version: '3.8'
 services:
   web:
     build: .
-    container_name: panicbully_web
     ports:
-      - "8081:80"
-    depends_on:
-      - db
-    env_file:
-      - .env
+      - "8888:80"
     volumes:
       - .:/var/www/html
-    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - db
 
   db:
-    image: mysql:5.7
-    container_name: panicbully_db
-    restart: unless-stopped
+    image: mariadb:10.4
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: panicbully2025!
       MYSQL_DATABASE: panicbully
-      MYSQL_USER: panicuser
+      MYSQL_USER: root
       MYSQL_PASSWORD: panicbully2025!
     volumes:
       - db_data:/var/lib/mysql
-      - ./sql:/docker-entrypoint-initdb.d
-    ports:
-      - "3306:3306"
+      - ./panicbully.sql:/docker-entrypoint-initdb.d/panicbully.sql
 
 volumes:
   db_data:
