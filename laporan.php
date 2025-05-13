@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -175,5 +178,18 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <?php if (isset($_GET['status']) && $_GET['status'] === 'sukses'): ?>
+  <script>
+    Swal.fire({
+      icon: 'success',
+      title: 'Laporan Berhasil Dikirim!',
+      text: 'Terima kasih atas partisipasimu. Laporanmu akan segera ditindaklanjuti.',
+      confirmButtonColor: '#f4511e'
+    });
+  </script>
+  <?php endif; ?>
+
 </body>
 </html>

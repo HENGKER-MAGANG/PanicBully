@@ -30,8 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->execute()) {
         $stmt->close();
         $conn->close();
-        header("Location: laporan_berhasil.php");
-        exit();
+        header("Location: laporan.php?status=sukses");
+    exit();
+
     } else {
         die("Gagal menyimpan laporan: " . $stmt->error);
     }
