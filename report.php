@@ -58,14 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
   <link rel="icon" href="assets/logo_smkn2pinrang.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <audio id="siren-audio" src="https://assets.mixkit.co/sfx/download/mixkit-police-siren-us-1640.mp3" preload="auto"></audio>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
       background: linear-gradient(135deg, #e3f2fd, #ffffff);
-      margin: 0;
       min-height: 100vh;
+      margin: 0;
       display: flex;
       flex-direction: column;
     }
@@ -78,9 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       justify-content: space-between;
       flex-wrap: wrap;
     }
-    .logo-left, .logo-right {
-      height: 50px;
-    }
     .header-title {
       display: flex;
       align-items: center;
@@ -90,44 +88,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       flex-grow: 1;
       justify-content: center;
     }
+    .logo-left, .logo-right {
+      height: 50px;
+    }
     .dashboard-nav {
-      display: flex;
-      justify-content: center;
+      text-align: center;
       margin-top: 0.5rem;
     }
     .dashboard-nav a {
-      font-weight: 500;
-      padding: 0.5rem 1.2rem;
-      border-radius: 10px;
-      font-size: 1rem;
-      transition: 0.3s ease;
       background-color: #1565c0;
       color: white;
       text-decoration: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 500;
+      transition: 0.3s ease;
     }
     .dashboard-nav a:hover {
       background-color: #0d47a1;
-      color: #fff;
     }
     main {
+      flex: 1;
       display: flex;
       justify-content: center;
-      padding: 1rem;
-      flex-grow: 1;
+      align-items: center;
+      padding: 2rem;
     }
     .main-card {
       background: white;
       border-radius: 16px;
       padding: 2rem 2.5rem;
-      margin: 40px auto;
-      width: 100%;
-      max-width: 550px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      max-width: 550px;
+      width: 100%;
+      text-align: center;
     }
     h2 {
       color: #0d47a1;
       font-weight: 700;
-      margin-bottom: 1rem;
     }
     p {
       font-size: 1.1rem;
@@ -142,6 +140,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       border-radius: 50px;
       transition: 0.3s ease;
       box-shadow: 0 6px 14px rgba(211, 47, 47, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
     }
     #panic-btn:hover {
       background: #b71c1c;
@@ -156,125 +157,140 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       color: #ccc;
       text-align: center;
       padding: 1rem;
-      font-size: 0.95rem;
     }
     @media (max-width: 768px) {
-      .header-title {
-        font-size: 1.2rem;
-        justify-content: center;
-      }
       .main-card {
         padding: 1.5rem;
-        margin: 20px auto;
       }
       #panic-btn {
         width: 100%;
-        padding: 14px;
+        justify-content: center;
       }
     }
   </style>
 </head>
 <body>
 
-  <header class="header">
-    <img src="assets/logo-sulsel.png" alt="Logo Sulsel" class="logo-left">
-    <div class="header-title">
-      <i class="fa-solid fa-bell"></i>
-      Panic Bully Button
-    </div>
-    <img src="assets/logo_smkn2pinrang.png" alt="Logo SMKN 2 Pinrang" class="logo-right">
-  </header>
+<header class="header">
+  <img src="assets/logo-sulsel.png" alt="Logo Sulsel" class="logo-left">
+  <div class="header-title">
+    <i class="fa-solid fa-bell"></i>
+    Panic Bully Button
+  </div>
+  <img src="assets/logo_smkn2pinrang.png" alt="Logo SMKN 2 Pinrang" class="logo-right">
+</header>
 
-  <nav class="dashboard-nav">
-    <a href="index.php">
-      <i class="fa fa-arrow-left me-2"></i>Kembali ke Beranda
-    </a>
-  </nav>
+<nav class="dashboard-nav">
+  <a href="index.php"><i class="fa fa-arrow-left me-2"></i>Kembali ke Beranda</a>
+</nav>
 
-  <main>
-    <div class="main-card text-center">
-      <h2>🚨 Laporkan Tindakan Bullying</h2>
-      <p>Merasa tidak aman? Mengalami perundungan? Klik tombol di bawah untuk melaporkan tindakan bullying secara cepat dan rahasia.</p>
+<main>
+  <div class="main-card">
+    <h2>🚨 Laporkan Tindakan Bullying</h2>
+    <p>Merasa tidak aman? Klik tombol di bawah untuk melaporkan tindakan bullying secara cepat dan rahasia.</p>
+    <form id="panic-form" method="POST">
+      <input type="hidden" name="latitude" id="latitude">
+      <input type="hidden" name="longitude" id="longitude">
+      <button type="button" id="panic-btn" onclick="getLocation()">
+        <span id="btn-text"><i class="fa-solid fa-triangle-exclamation"></i> LAPORKAN SEKARANG</span>
+        <span id="btn-loading" class="d-none"><i class="fa-solid fa-spinner fa-spin"></i> Mengirim...</span>
+      </button>
+    </form>
+  </div>
+</main>
 
-      <form id="panic-form" method="POST">
-        <input type="hidden" name="latitude" id="latitude">
-        <input type="hidden" name="longitude" id="longitude">
-        <button type="button" id="panic-btn" onclick="getLocation()">LAPORKAN SEKARANG</button>
-      </form>
-    </div>
-  </main>
+<footer class="footer">
+  <p>&copy; 2025 Community Programmer | Ikhsan Pratama - SMKN 2 Pinrang</p>
+</footer>
 
-  <footer class="footer">
-    <p>&copy; 2025 Community Programmer | Ikhsan Pratama - SMKN 2 Pinrang</p>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    function getLocation() {
-      Swal.fire({
-        title: 'Konfirmasi',
-        text: "❗Fitur ini hanya digunakan dalam keadaan darurat.\n\nJika tidak urgent, silakan gunakan fitur 'Chat Laporan'.\n\nApakah kamu yakin ingin melaporkan sekarang?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Laporkan',
-        cancelButtonText: 'Batal',
-        reverseButtons: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const btn = document.getElementById('panic-btn');
-          btn.innerText = 'Mengirim...';
-          btn.disabled = true;
-
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, showError, { timeout: 5000 });
-          } else {
-            showError();
-          }
-        }
-      });
-    }
-
-    function showPosition(position) {
-      document.getElementById("latitude").value = position.coords.latitude;
-      document.getElementById("longitude").value = position.coords.longitude;
-      document.getElementById("panic-form").submit();
-    }
-
-    function showError() {
-      Swal.fire({
-        icon: 'error',
-        title: 'Gagal Mengambil Lokasi',
-        text: '❌ Gagal mengambil lokasi. Pastikan GPS aktif dan izin lokasi diberikan.'
-      });
-      resetButton();
-    }
-
-    function resetButton() {
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function getLocation() {
+  Swal.fire({
+    title: 'Konfirmasi',
+    html: "❗<b>Fitur ini hanya untuk keadaan darurat!</b><br><br>Jika tidak urgent, gunakan fitur 'Chat Laporan'.<br><br>Apakah kamu yakin ingin melaporkan sekarang?",
+    icon: 'warning',
+    showCancelButton: true,
+    showDenyButton: true,
+    confirmButtonText: 'Laporkan Sekarang',
+    denyButtonText: 'Batal & Kirim ke Admin',
+    cancelButtonText: 'Tutup',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
       const btn = document.getElementById('panic-btn');
-      btn.innerText = 'LAPORKAN SEKARANG';
-      btn.disabled = false;
-    }
+      document.getElementById('btn-text').classList.add('d-none');
+      document.getElementById('btn-loading').classList.remove('d-none');
+      btn.disabled = true;
 
-    <?php if ($responseDetail): ?>
-    window.onload = function () {
+      document.getElementById('siren-audio').play();
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError, { timeout: 5000 });
+      } else {
+        showError();
+      }
+
+    } else if (result.isDenied) {
+      sendCancelMessage();
+    }
+  });
+}
+
+function showPosition(position) {
+  document.getElementById("latitude").value = position.coords.latitude;
+  document.getElementById("longitude").value = position.coords.longitude;
+  document.getElementById("panic-form").submit();
+}
+
+function showError() {
+  Swal.fire({
+    icon: 'error',
+    title: 'Gagal Mengambil Lokasi',
+    text: '❌ Gagal mengambil lokasi. Pastikan GPS aktif dan izin lokasi diberikan.'
+  });
+  resetButton();
+}
+
+function resetButton() {
+  const btn = document.getElementById('panic-btn');
+  btn.disabled = false;
+  document.getElementById('btn-text').classList.remove('d-none');
+  document.getElementById('btn-loading').classList.add('d-none');
+}
+
+function sendCancelMessage() {
+  fetch('cancel.php')
+    .then(() => {
       Swal.fire({
-        icon: 'success',
-        title: 'Laporan Terkirim',
-        text: '<?= $responseDetail ?>',
+        icon: 'info',
+        title: 'Dibatalkan',
+        text: '✅ Laporan dibatalkan dan pesan telah dikirim ke admin.',
         confirmButtonText: 'OK'
       });
-    };
-    <?php elseif ($errorDetail): ?>
-    window.onload = function () {
-      Swal.fire({
-        icon: 'error',
-        title: 'Gagal Mengirim Pesan',
-        text: '<?= $errorDetail ?>',
-        confirmButtonText: 'OK'
-      });
-    };
-    <?php endif; ?>
-  </script>
+    });
+}
+
+<?php if ($responseDetail): ?>
+window.onload = function () {
+  Swal.fire({
+    icon: 'success',
+    title: 'Laporan Terkirim',
+    text: '<?= $responseDetail ?>',
+    confirmButtonText: 'OK'
+  });
+};
+<?php elseif ($errorDetail): ?>
+window.onload = function () {
+  Swal.fire({
+    icon: 'error',
+    title: 'Gagal Mengirim Pesan',
+    text: '<?= $errorDetail ?>',
+    confirmButtonText: 'OK'
+  });
+};
+<?php endif; ?>
+</script>
 </body>
 </html>
