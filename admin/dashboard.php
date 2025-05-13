@@ -1,5 +1,7 @@
 <?php
+session_start();
 include '../config.php';
+
 if (!isset($_SESSION['admin'])) {
     header("Location: login.php");
     exit;
@@ -10,7 +12,6 @@ $totalAdmin = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total F
 
 $laporanTerbaru = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC LIMIT 5");
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
