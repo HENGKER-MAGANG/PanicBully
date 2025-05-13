@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     $mapsLink = "https://www.google.com/maps?q=$latitude,$longitude";
 
     $lokasi = $mapsLink;
-    $nama = ''; // Anonim
+    $nama = '';
     $deskripsi = 'Laporan otomatis dari tombol panic.';
     $tingkat = 'tinggi';
     $tanggal = date('Y-m-d H:i:s');
@@ -90,6 +90,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       flex-grow: 1;
       justify-content: center;
     }
+    .dashboard-nav {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      margin: 0.5rem auto;
+      flex-wrap: wrap;
+    }
+    .dashboard-nav a {
+      color: #fff;
+      background-color: #1565c0;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+    .dashboard-nav a:hover {
+      background-color: #0d47a1;
+    }
     main {
       display: flex;
       justify-content: center;
@@ -140,12 +159,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       font-size: 0.95rem;
     }
     @media (max-width: 768px) {
-      .header {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.8rem 1rem;
-      }
       .header-title {
         font-size: 1.2rem;
         justify-content: center;
@@ -171,6 +184,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     </div>
     <img src="assets/logo_smkn2pinrang.png" alt="Logo SMKN 2 Pinrang" class="logo-right">
   </header>
+
+  <nav class="dashboard-nav">
+    <a href="dashboard.php"><i class="fa fa-home me-1"></i>Dashboard</a>
+    <a href="data_laporan.php"><i class="fa fa-file-alt me-1"></i>Laporan</a>
+    <a href="data_diagram.php"><i class="fa fa-chart-bar me-1"></i>Diagram</a>
+    <a href="logout.php"><i class="fa fa-sign-out-alt me-1"></i>Keluar</a>
+  </nav>
 
   <main>
     <div class="main-card text-center">
