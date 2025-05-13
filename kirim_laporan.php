@@ -1,34 +1,33 @@
 <?php
 // Koneksi ke database
-$conn = new mysqli("localhost", "root", "", "panicbully");
+$conn = new mysqli("127.0.0.1", "root", "", "panicbully");
 
 // Cek koneksi
 if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
 
+// Cek jika permintaan POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ambil data dari form
-    $nama      = htmlspecialchars($_POST['nama'] ?? '');
-    $lokasi    = htmlspecialchars($_POST['lokasi'] ?? '');
-    $deskripsi = htmlspecialchars($_POST['deskripsi'] ?? '');
-    $tingkat   = htmlspecialchars($_POST['tingkat'] ?? '');
+    // Ambil dan sanitasi data
+    $nama      = htmlspecialchars(trim($_POST['nama'] ?? ''));
+    $lokasi    = htmlspecialchars(trim($_POST['lokasi'] ?? ''));
+    $deskripsi = htmlspecialchars(trim($_POST['deskripsi'] ?? ''));
+    $tingkat   = htmlspecialchars(trim($_POST['tingkat'] ?? ''));
 
-    // Validasi dasar
+    // Validasi input wajib
     if (empty($lokasi) || empty($deskripsi) || empty($tingkat)) {
-        die('Data tidak lengkap.');
+        die('Semua data wajib diisi.');
     }
 
     // Gunakan "Anonim" jika nama kosong
     $nama = $nama ?: 'Anonim';
 
-    // Siapkan query insert
+    // Siapkan dan eksekusi query
     $stmt = $conn->prepare("INSERT INTO laporan_bully (nama, lokasi, deskripsi, tingkat, tanggal) VALUES (?, ?, ?, ?, NOW())");
     $stmt->bind_param("ssss", $nama, $lokasi, $deskripsi, $tingkat);
 
-    // Eksekusi dan cek hasil
     if ($stmt->execute()) {
-        // Redirect ke halaman sukses
         header("Location: laporan_berhasil.php");
         exit();
     } else {
@@ -37,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $stmt->close();
 } else {
-    // Jika tidak melalui POST
+    // Redirect jika bukan POST
     header("Location: laporan.php");
     exit();
 }
