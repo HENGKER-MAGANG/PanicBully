@@ -1,5 +1,5 @@
 <?php
-$host = 'mysql-panicbully';  // Gunakan nama service/database di Coolify
+$host = 'lkks8wcgo40kc0c8s0gg484';  // pakai nama internal dari Coolify
 $user = 'panicuser';
 $password = 'PanicUser@123';
 $database = 'default';
