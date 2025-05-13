@@ -2,6 +2,9 @@
 session_start();
 include '../config.php';
 
+$loginSuccess = false;
+$errorMessage = '';
+
 if (isset($_POST['login'])) {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
@@ -13,13 +16,12 @@ if (isset($_POST['login'])) {
 
         if (password_verify($password, $row['password'])) {
             $_SESSION['admin'] = $username;
-            header("Location: dashboard.php");
-            exit;
+            $loginSuccess = true;
         } else {
-            $error = "Username atau password salah!";
+            $errorMessage = "Username atau password salah!";
         }
     } else {
-        $error = "Username atau password salah!";
+        $errorMessage = "Username atau password salah!";
     }
 }
 ?>
@@ -34,6 +36,7 @@ if (isset($_POST['login'])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -96,7 +99,6 @@ if (isset($_POST['login'])) {
 <body>
   <div class="login-card">
     <h3 class="mb-3 text-center">Login Admin</h3>
-    <?php if (!empty($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
     <form method="post">
       <div class="mb-3">
         <input type="text" name="username" class="form-control" placeholder="Username" required />
@@ -108,5 +110,26 @@ if (isset($_POST['login'])) {
     </form>
     <a href="../index.php" class="btn-back"><i class="fas fa-arrow-left"></i> Kembali ke Beranda</a><br>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    <?php if ($loginSuccess): ?>
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Berhasil!',
+        text: 'Selamat datang admin!',
+        timer: 1500,
+        showConfirmButton: false
+      }).then(() => {
+        window.location.href = 'dashboard.php';
+      });
+    <?php elseif (!empty($errorMessage)): ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Gagal!',
+        text: '<?= $errorMessage ?>'
+      });
+    <?php endif; ?>
+  </script>
 </body>
 </html>

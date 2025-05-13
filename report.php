@@ -59,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -181,8 +182,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
         <input type="hidden" name="longitude" id="longitude">
         <button type="button" id="panic-btn" onclick="getLocation()">LAPORKAN SEKARANG</button>
       </form>
-
-      <div id="errorAlertContainer"></div>
     </div>
   </main>
 
@@ -190,37 +189,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     <p>&copy; 2025 Community Programmer | Ikhsan Pratama - SMKN 2 Pinrang</p>
   </footer>
 
-  <!-- Modal sukses -->
-  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-success">
-        <div class="modal-header bg-success text-white">
-          <h5 class="modal-title" id="successModalLabel">Laporan Terkirim</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-        </div>
-        <div class="modal-body">
-          <?= $responseDetail ?>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     function getLocation() {
-      if (confirm("❗Fitur ini hanya digunakan dalam keadaan darurat.\n\nJika tidak urgent, silakan gunakan fitur 'Chat Laporan'.\n\nApakah kamu yakin ingin melaporkan sekarang?")) {
-        const btn = document.getElementById('panic-btn');
-        btn.innerText = 'Mengirim...';
-        btn.disabled = true;
+      Swal.fire({
+        title: 'Konfirmasi',
+        text: "❗Fitur ini hanya digunakan dalam keadaan darurat.\n\nJika tidak urgent, silakan gunakan fitur 'Chat Laporan'.\n\nApakah kamu yakin ingin melaporkan sekarang?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Laporkan',
+        cancelButtonText: 'Batal',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const btn = document.getElementById('panic-btn');
+          btn.innerText = 'Mengirim...';
+          btn.disabled = true;
 
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(showPosition, showError, { timeout: 5000 });
-        } else {
-          showError();
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError, { timeout: 5000 });
+          } else {
+            showError();
+          }
         }
-      }
+      });
     }
 
     function showPosition(position) {
@@ -230,17 +223,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     }
 
     function showError() {
-      const errorContainer = document.getElementById('errorAlertContainer');
-      errorContainer.innerHTML = `
-        <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
-          ❌ Gagal mengambil lokasi. Pastikan GPS aktif dan izin lokasi diberikan.
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      `;
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal Mengambil Lokasi',
+        text: '❌ Gagal mengambil lokasi. Pastikan GPS aktif dan izin lokasi diberikan.'
+      });
       resetButton();
-      setTimeout(() => {
-        errorContainer.innerHTML = '';
-      }, 10000);
     }
 
     function resetButton() {
@@ -251,12 +239,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
 
     <?php if ($responseDetail): ?>
     window.onload = function () {
-      const modal = new bootstrap.Modal(document.getElementById('successModal'));
-      modal.show();
+      Swal.fire({
+        icon: 'success',
+        title: 'Laporan Terkirim',
+        text: '<?= $responseDetail ?>'
+      });
+    };
+    <?php elseif ($errorDetail): ?>
+    window.onload = function () {
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal Mengirim Pesan',
+        text: '<?= $errorDetail ?>'
+      });
     };
     <?php endif; ?>
   </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
