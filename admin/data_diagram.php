@@ -155,7 +155,7 @@ $dataLaporanHarian = array_values($laporanPerHari);
   <footer>
     <p>&copy; <?= date('Y') ?> Panic Bully Admin Dashboard</p>
   </footer>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     new Chart(document.getElementById('bulanChart').getContext('2d'), {
       type: 'bar',
