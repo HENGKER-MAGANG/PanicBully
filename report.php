@@ -46,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
 }
 ?>
 
+<!-- Tetap gunakan bagian PHP di atas tanpa perubahan -->
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -64,21 +66,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       display: flex;
       flex-direction: column;
     }
+
     .header {
-      background: linear-gradient(to right, #0d47a1, #1976d2);
+      background: linear-gradient(to right, #0d47a1, #1565c0);
       color: white;
-      padding: 1rem 2rem;
+      padding: 1.2rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s ease;
+      z-index: 1000;
     }
+
+    .header:hover {
+      background: linear-gradient(to right, #0b3c91, #0d47a1);
+    }
+
     .logo {
-      height: 50px;
+      height: 55px;
+      transition: transform 0.3s ease;
     }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
     .header-title {
-      font-size: 1.6rem;
-      font-weight: bold;
+      font-size: 1.75rem;
+      font-weight: 700;
+      flex: 1;
+      text-align: center;
+      min-width: 200px;
+      color: #ffffff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
+
     main {
       flex-grow: 1;
       display: flex;
@@ -86,24 +110,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       align-items: center;
       padding: 2rem 1rem;
     }
-    .back-btn {
-      align-self: flex-start;
-      margin-bottom: 1rem;
-    }
+
     .card-report {
       background: #ffffff;
       border-radius: 1rem;
-      padding: 2rem;
+      padding: 2.5rem 2rem;
       width: 100%;
       max-width: 600px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
       text-align: center;
       animation: fadeIn 0.8s ease;
     }
+
     h2 {
-      color: #0d47a1;
+      color: #d32f2f;
       margin-bottom: 1rem;
+      font-weight: bold;
     }
+
+    p {
+      font-size: 1.05rem;
+      color: #444;
+      margin-bottom: 2rem;
+    }
+
     #panic-btn {
       padding: 14px 36px;
       font-size: 1.1rem;
@@ -115,30 +145,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       transition: 0.3s ease;
       animation: pulse 1.5s infinite;
     }
+
     #panic-btn:hover {
       background: #b71c1c;
       transform: scale(1.05);
     }
+
     #panic-btn:disabled {
       background: #888;
       cursor: not-allowed;
       animation: none;
     }
+
     footer {
       background: #0a1929;
       color: #ccc;
       text-align: center;
       padding: 1rem;
       font-size: 0.95rem;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.08);
     }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(40px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     @keyframes pulse {
       0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.6); }
       70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(211, 47, 47, 0); }
       100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+    }
+
+    @media (max-width: 576px) {
+      .header-title {
+        font-size: 1.3rem;
+        text-align: center;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      p {
+        font-size: 0.95rem;
+      }
     }
   </style>
 </head>
@@ -151,10 +200,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
   </header>
 
   <main>
-    <a href="index.php" class="btn btn-outline-primary back-btn">
-      <i class="fa fa-arrow-left me-1"></i> Kembali ke Beranda
-    </a>
-
     <div class="card-report">
       <h2>🚨 Laporkan Tindakan Bullying</h2>
       <p>Merasa tidak aman? Klik tombol di bawah untuk mengirim laporan darurat dengan lokasi Anda.</p>
@@ -181,8 +226,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
         showCancelButton: false,
         confirmButtonText: 'Kirim Laporan Sekarang',
         confirmButtonColor: '#d32f2f',
-        customClass: {
-          popup: 'animated fadeInDown'
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
         }
       }).then((result) => {
         if (result.isConfirmed) {
@@ -244,3 +292,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
   </script>
 </body>
 </html>
+
