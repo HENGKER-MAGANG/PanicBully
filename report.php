@@ -1,4 +1,6 @@
 <?php
+include 'config.php';
+
 $token = "mrDCnGqnLfihKSXNbsfh"; 
 $target = "6282261325895,6282349273941,6285241419991"; 
 $responseDetail = '';
@@ -6,11 +8,22 @@ $responseDetail = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset($_POST['longitude'])) {
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
-
     $mapsLink = "https://www.google.com/maps?q=$latitude,$longitude";
 
-    $curl = curl_init();
+    // Simpan ke database
+    $lokasi = $mapsLink;
+    $nama = ''; // Kosong untuk anonim
+    $deskripsi = 'Laporan otomatis dari tombol panic.';
+    $tingkat = 'tinggi';
+    $tanggal = date('Y-m-d H:i:s');
 
+    $stmt = $conn->prepare("INSERT INTO laporan_bully (nama, lokasi, deskripsi, tingkat, tanggal) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $nama, $lokasi, $deskripsi, $tingkat, $tanggal);
+    $stmt->execute();
+    $stmt->close();
+
+    // Kirim via Fonnte
+    $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://api.fonnte.com/send',
         CURLOPT_RETURNTRANSFER => true,
@@ -24,12 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
             "Authorization: $token"
         ),
     ));
-
     $response = curl_exec($curl);
     curl_close($curl);
 
-    $responseDetail = "✅ Laporan berhasil dikirim! Tim akan segera menindaklanjuti.";
+    $responseDetail = "✅ Laporan berhasil dikirim dan disimpan! Tim akan segera menindaklanjuti.";
 }
+
 ?>
 
 <!DOCTYPE html>
