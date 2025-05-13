@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../config.php';
 $laporan = mysqli_query($conn, "SELECT * FROM laporan_bully ORDER BY tanggal DESC LIMIT 5");
 

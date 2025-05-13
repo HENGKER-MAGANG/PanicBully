@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../config.php';
 $data = mysqli_query($conn, "SELECT * FROM admin");
 ?>
