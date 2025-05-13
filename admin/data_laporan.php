@@ -95,7 +95,7 @@ $result = mysqli_query($conn, $query);
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+            <a class="nav-link" href="#" onclick="confirmLogout()"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
           </li>
         </ul>
       </div>
@@ -212,6 +212,24 @@ $result = mysqli_query($conn, $query);
       }
     });
   }
+
+  function confirmLogout() {
+  Swal.fire({
+    title: 'Yakin ingin logout?',
+    text: 'Sesi Anda akan diakhiri.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Ya, logout!',
+    cancelButtonText: 'Batal'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = 'logout.php';
+    }
+  });
+}
+
 </script>
 </body>
 </html>

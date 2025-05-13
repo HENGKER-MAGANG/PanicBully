@@ -109,13 +109,12 @@ $dataLaporanHarian = array_values($laporanPerHari);
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+            <a class="nav-link" href="#" onclick="confirmLogout()"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-
   <div class="container">
     <!-- Diagram laporan per bulan -->
     <div class="card">
@@ -189,6 +188,24 @@ $dataLaporanHarian = array_values($laporanPerHari);
       },
       options: { responsive: true, scales: { y: { beginAtZero: true } } }
     });
+
+  function confirmLogout() {
+  Swal.fire({
+    title: 'Yakin ingin logout?',
+    text: 'Sesi Anda akan diakhiri.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Ya, logout!',
+    cancelButtonText: 'Batal'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = 'logout.php';
+    }
+  });
+}
+
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
