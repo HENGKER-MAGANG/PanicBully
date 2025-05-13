@@ -12,28 +12,51 @@ $data = mysqli_query($conn, "SELECT * FROM admin");
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 40px;
+      margin: 20mm;
+      font-size: 12px;
     }
+
     h2 {
       text-align: center;
+      margin-bottom: 20px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 30px;
+      table-layout: auto;
+      word-wrap: break-word;
     }
+
     th, td {
       border: 1px solid #000;
-      padding: 8px 12px;
+      padding: 6px 10px;
       text-align: left;
+      vertical-align: top;
+      font-size: 12px;
     }
+
     th {
-      background-color: #f2f2f2;
+      background-color: #e0e0e0;
     }
+
     @media print {
+      body {
+        margin: 0;
+      }
+
       @page {
-        size: A4;
+        size: A4 portrait;
         margin: 20mm;
+      }
+
+      table {
+        page-break-inside: auto;
+      }
+
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
       }
     }
   </style>
@@ -43,13 +66,19 @@ $data = mysqli_query($conn, "SELECT * FROM admin");
   <table>
     <thead>
       <tr>
-        <th>No</th>
-        <th>Username</th>
-        <th>Password</th>
+        <th style="width: 5%;">No</th>
+        <th style="width: 45%;">Username</th>
+        <th style="width: 50%;">Password</th>
       </tr>
     </thead>
     <tbody>
-      <?php $no = 1; while ($row = mysqli_fetch_assoc($data)) : ?>
+      <?php
+      session_start();
+      include '../config.php';
+      $data = mysqli_query($conn, "SELECT * FROM admin");
+      $no = 1;
+      while ($row = mysqli_fetch_assoc($data)) :
+      ?>
       <tr>
         <td><?= $no++ ?></td>
         <td><?= htmlspecialchars($row['username']) ?></td>
