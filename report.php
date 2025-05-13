@@ -46,18 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
 }
 ?>
 
-<!-- Tetap gunakan bagian PHP di atas tanpa perubahan -->
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panic Bully</title>
   <link rel="icon" href="assets/logo_smkn2pinrang.png">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -76,12 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       justify-content: space-between;
       flex-wrap: wrap;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      transition: background 0.3s ease;
       z-index: 1000;
-    }
-
-    .header:hover {
-      background: linear-gradient(to right, #0b3c91, #0d47a1);
     }
 
     .logo {
@@ -178,13 +171,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     }
 
     @media (max-width: 576px) {
+      .header {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .logo {
+        height: 40px;
+        margin: 5px;
+      }
+
       .header-title {
+        order: 1;
+        width: 100%;
         font-size: 1.3rem;
         text-align: center;
+        margin: 0.5rem 0;
       }
+
       h2 {
         font-size: 1.3rem;
       }
+
       p {
         font-size: 0.95rem;
       }
@@ -193,10 +201,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
 </head>
 <body>
 
-  <header class="header">
-    <img src="assets/logo-sulsel.png" class="logo" alt="Logo Sulsel">
-    <div class="header-title"><i class="fa-solid fa-bell"></i> Panic Bully Button</div>
-    <img src="assets/logo_smkn2pinrang.png" class="logo" alt="Logo SMKN 2 Pinrang">
+  <!-- Header Responsive -->
+  <header class="header d-flex justify-content-between align-items-center flex-wrap px-3">
+    <img src="assets/logo-sulsel.png" class="logo me-3" alt="Logo Sulsel">
+    <div class="header-title text-center flex-grow-1 my-2 my-md-0">
+      <i class="fa-solid fa-bell"></i> Panic Bully Button
+    </div>
+    <img src="assets/logo_smkn2pinrang.png" class="logo ms-3" alt="Logo SMKN 2 Pinrang">
   </header>
 
   <main>
@@ -226,12 +237,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
         showCancelButton: false,
         confirmButtonText: 'Kirim Laporan Sekarang',
         confirmButtonColor: '#d32f2f',
-        showClass: {
-          popup: 'animate__animated animate__fadeInDown'
-        },
-        hideClass: {
-          popup: 'animate__animated animate__fadeOutUp'
-        }
       }).then((result) => {
         if (result.isConfirmed) {
           const btn = document.getElementById('panic-btn');
@@ -292,4 +297,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
   </script>
 </body>
 </html>
-

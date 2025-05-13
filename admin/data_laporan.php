@@ -101,6 +101,7 @@ $result = mysqli_query($conn, $query);
       </div>
     </div>
   </nav>
+
 <div class="container">
   <div class="card p-4">
     <h4 class="mb-3">Data Laporan Bullying</h4>
@@ -214,22 +215,41 @@ $result = mysqli_query($conn, $query);
   }
 
   function confirmLogout() {
-  Swal.fire({
-    title: 'Yakin ingin logout?',
-    text: 'Sesi Anda akan diakhiri.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#dc3545',
-    cancelButtonColor: '#6c757d',
-    confirmButtonText: 'Ya, logout!',
-    cancelButtonText: 'Batal'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.href = 'logout.php';
-    }
-  });
-}
+    Swal.fire({
+      title: 'Yakin ingin logout?',
+      text: 'Sesi Anda akan diakhiri.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Ya, logout!',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = 'logout.php';
+      }
+    });
+  }
 
+  <?php if (isset($_GET['success']) && $_GET['success'] === 'deleted'): ?>
+  Swal.fire({
+    icon: 'success',
+    title: 'Berhasil!',
+    text: 'Laporan berhasil dihapus.',
+    confirmButtonText: 'OK'
+  });
+  <?php elseif (isset($_GET['error'])): ?>
+  Swal.fire({
+    icon: 'error',
+    title: 'Gagal!',
+    text: '<?php
+      if ($_GET["error"] === "failed") echo "Terjadi kesalahan saat menghapus data.";
+      elseif ($_GET["error"] === "invalid") echo "Permintaan tidak valid.";
+      else echo "Terjadi kesalahan.";
+    ?>',
+    confirmButtonText: 'OK'
+  });
+  <?php endif; ?>
 </script>
 </body>
 </html>

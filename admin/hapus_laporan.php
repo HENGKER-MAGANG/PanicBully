@@ -12,12 +12,13 @@ if (isset($_GET['id'])) {
     $query = "DELETE FROM laporan_bully WHERE id = $id";
 
     if (mysqli_query($conn, $query)) {
-        $_SESSION['message'] = "Laporan berhasil dihapus.";
+        header("Location: data_laporan.php?success=deleted");
     } else {
-        $_SESSION['message'] = "Gagal menghapus laporan.";
+        header("Location: data_laporan.php?error=failed");
     }
+    exit;
+} else {
+    header("Location: data_laporan.php?error=invalid");
+    exit;
 }
-
-header("Location: data_laporan.php");
-exit;
 ?>
