@@ -93,21 +93,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     .dashboard-nav {
       display: flex;
       justify-content: center;
-      gap: 1.2rem;
-      margin: 0.5rem auto;
-      flex-wrap: wrap;
+      margin-top: 0.5rem;
     }
     .dashboard-nav a {
-      color: #fff;
-      background-color: #1565c0;
-      padding: 0.4rem 1rem;
-      border-radius: 8px;
-      text-decoration: none;
       font-weight: 500;
-      transition: background-color 0.3s;
+      padding: 0.5rem 1.2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: 0.3s ease;
+      background-color: #1565c0;
+      color: white;
+      text-decoration: none;
     }
     .dashboard-nav a:hover {
       background-color: #0d47a1;
+      color: #fff;
     }
     main {
       display: flex;
@@ -186,10 +186,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
   </header>
 
   <nav class="dashboard-nav">
-    <a href="dashboard.php"><i class="fa fa-home me-1"></i>Dashboard</a>
-    <a href="data_laporan.php"><i class="fa fa-file-alt me-1"></i>Laporan</a>
-    <a href="data_diagram.php"><i class="fa fa-chart-bar me-1"></i>Diagram</a>
-    <a href="logout.php"><i class="fa fa-sign-out-alt me-1"></i>Keluar</a>
+    <a href="index.php">
+      <i class="fa fa-arrow-left me-2"></i>Kembali ke Beranda
+    </a>
   </nav>
 
   <main>
@@ -262,7 +261,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       Swal.fire({
         icon: 'success',
         title: 'Laporan Terkirim',
-        text: '<?= $responseDetail ?>'
+        text: '<?= $responseDetail ?>',
+        confirmButtonText: 'OK'
       });
     };
     <?php elseif ($errorDetail): ?>
@@ -270,7 +270,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       Swal.fire({
         icon: 'error',
         title: 'Gagal Mengirim Pesan',
-        text: '<?= $errorDetail ?>'
+        text: '<?= $errorDetail ?>',
+        confirmButtonText: 'OK'
       });
     };
     <?php endif; ?>
