@@ -1,14 +1,13 @@
-# Menggunakan image resmi PHP dengan Apache
 FROM php:8.2-apache
 
-# Install ekstensi MySQL untuk PHP
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+# Install mysqli
+RUN docker-php-ext-install mysqli
 
-# Salin semua file project ke dalam container
+# Copy kode kamu
 COPY . /var/www/html/
 
-# Ubah kepemilikan agar bisa diakses web server
-RUN chown -R www-data:www-data /var/www/html
+# Tambahkan wait script (opsional)
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
 
-# Aktifkan mod_rewrite
-RUN a2enmod rewrite
+CMD ["/wait-for-it.sh", "mysql:3306", "--timeout=30", "--strict", "--", "apache2-foreground"]
