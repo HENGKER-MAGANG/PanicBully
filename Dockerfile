@@ -1,13 +1,13 @@
-FROM php:8.2-apache
+FROM php:8.1-apache
 
-# Install mysqli
+# Install ekstensi MySQLi
 RUN docker-php-ext-install mysqli
 
-# Copy kode kamu
+# Aktifkan mod_rewrite
+RUN a2enmod rewrite
+
+# Salin file project ke dalam container
 COPY . /var/www/html/
 
-# Tambahkan wait script (opsional)
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-
-CMD ["/wait-for-it.sh", "mysql:3306", "--timeout=30", "--strict", "--", "apache2-foreground"]
+# Set permission
+RUN chown -R www-data:www-data /var/www/html
