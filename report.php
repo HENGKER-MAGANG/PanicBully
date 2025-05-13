@@ -2,18 +2,18 @@
 session_start();
 include 'config.php';
 
-$token = "mrDCnGqnLfihKSXNbsfh"; 
-$target = "6282261325895,6282349273941,6285241419991"; 
+$token = "mrDCnGqnLfihKSXNbsfh";
+$target = "6282261325895,6282349273941,6285241419991";
 $responseDetail = '';
+$errorDetail = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset($_POST['longitude'])) {
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
     $mapsLink = "https://www.google.com/maps?q=$latitude,$longitude";
 
-    // Simpan ke database
     $lokasi = $mapsLink;
-    $nama = ''; // Kosong untuk anonim
+    $nama = ''; // Anonim
     $deskripsi = 'Laporan otomatis dari tombol panic.';
     $tingkat = 'tinggi';
     $tanggal = date('Y-m-d H:i:s');
@@ -23,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     $stmt->execute();
     $stmt->close();
 
-    // Kirim via Fonnte
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://api.fonnte.com/send',
@@ -39,11 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
         ),
     ));
     $response = curl_exec($curl);
+    $curlError = curl_error($curl);
     curl_close($curl);
 
-    $responseDetail = "✅ Laporan berhasil dikirim dan disimpan! Tim akan segera menindaklanjuti.";
+    if ($response && !$curlError) {
+        $responseDetail = "✅ Laporan berhasil dikirim dan disimpan! Tim akan segera menindaklanjuti.";
+    } else {
+        $errorDetail = "❌ Gagal mengirim pesan ke WhatsApp. Tapi laporan tetap disimpan.";
+    }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -53,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Panic Bully</title>
   <link rel="icon" href="assets/logo_smkn2pinrang.png">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -65,7 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       display: flex;
       flex-direction: column;
     }
-
     .header {
       background: linear-gradient(to right, #0d47a1, #1976d2);
       color: white;
@@ -75,11 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       justify-content: space-between;
       flex-wrap: wrap;
     }
-
     .logo-left, .logo-right {
       height: 50px;
     }
-
     .header-title {
       display: flex;
       align-items: center;
@@ -89,14 +89,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       flex-grow: 1;
       justify-content: center;
     }
-
     main {
       display: flex;
       justify-content: center;
       padding: 1rem;
       flex-grow: 1;
     }
-
     .main-card {
       background: white;
       border-radius: 16px;
@@ -106,18 +104,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       max-width: 550px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     }
-
     h2 {
       color: #0d47a1;
       font-weight: 700;
       margin-bottom: 1rem;
     }
-
     p {
       font-size: 1.1rem;
       color: #555;
     }
-
     #panic-btn {
       font-size: 1.1rem;
       padding: 14px 36px;
@@ -128,29 +123,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       transition: 0.3s ease;
       box-shadow: 0 6px 14px rgba(211, 47, 47, 0.4);
     }
-
     #panic-btn:hover {
       background: #b71c1c;
       transform: scale(1.05);
     }
-
     #panic-btn:disabled {
       background: #888;
       cursor: not-allowed;
     }
-
-    #response {
-      margin-top: 30px;
-      padding: 1.2rem;
-      border-left: 6px solid #4caf50;
-      background-color: #e8f5e9;
-      color: #2e7d32;
-      border-radius: 10px;
-      font-size: 1.05rem;
-      font-weight: 500;
-      display: <?php echo $responseDetail ? 'block' : 'none'; ?>;
-    }
-
     .footer {
       background-color: #0a1929;
       color: #ccc;
@@ -158,7 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       padding: 1rem;
       font-size: 0.95rem;
     }
-
     @media (max-width: 768px) {
       .header {
         flex-direction: row;
@@ -166,17 +145,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
         justify-content: space-between;
         padding: 0.8rem 1rem;
       }
-
       .header-title {
         font-size: 1.2rem;
         justify-content: center;
       }
-
       .main-card {
         padding: 1.5rem;
         margin: 20px auto;
       }
-
       #panic-btn {
         width: 100%;
         padding: 14px;
@@ -198,17 +174,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
   <main>
     <div class="main-card text-center">
       <h2>🚨 Laporkan Tindakan Bullying</h2>
-      <p>
-        Merasa tidak aman? Mengalami perundungan? Klik tombol di bawah untuk melaporkan tindakan bullying secara cepat dan rahasia.
-      </p>
+      <p>Merasa tidak aman? Mengalami perundungan? Klik tombol di bawah untuk melaporkan tindakan bullying secara cepat dan rahasia.</p>
+
       <form id="panic-form" method="POST">
         <input type="hidden" name="latitude" id="latitude">
         <input type="hidden" name="longitude" id="longitude">
         <button type="button" id="panic-btn" onclick="getLocation()">LAPORKAN SEKARANG</button>
       </form>
-      <div id="response">
-        <?php echo $responseDetail; ?>
-      </div>
+
+      <div id="errorAlertContainer"></div>
     </div>
   </main>
 
@@ -216,17 +190,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     <p>&copy; 2025 Community Programmer | Ikhsan Pratama - SMKN 2 Pinrang</p>
   </footer>
 
+  <!-- Modal sukses -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-success">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="successModalLabel">Laporan Terkirim</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <?= $responseDetail ?>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     function getLocation() {
-      const btn = document.getElementById('panic-btn');
-      btn.innerText = 'Mengirim...';
-      btn.disabled = true;
+      if (confirm("❗Fitur ini hanya digunakan dalam keadaan darurat.\n\nJika tidak urgent, silakan gunakan fitur 'Chat Laporan'.\n\nApakah kamu yakin ingin melaporkan sekarang?")) {
+        const btn = document.getElementById('panic-btn');
+        btn.innerText = 'Mengirim...';
+        btn.disabled = true;
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError, { timeout: 5000 });
-      } else {
-        alert("Browser Anda tidak mendukung Geolocation.");
-        resetButton();
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition, showError, { timeout: 5000 });
+        } else {
+          showError();
+        }
       }
     }
 
@@ -236,9 +229,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       document.getElementById("panic-form").submit();
     }
 
-    function showError(error) {
-      alert("Tidak dapat mengambil lokasi. Pastikan GPS aktif dan izin lokasi diberikan.");
+    function showError() {
+      const errorContainer = document.getElementById('errorAlertContainer');
+      errorContainer.innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+          ❌ Gagal mengambil lokasi. Pastikan GPS aktif dan izin lokasi diberikan.
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      `;
       resetButton();
+      setTimeout(() => {
+        errorContainer.innerHTML = '';
+      }, 10000);
     }
 
     function resetButton() {
@@ -247,15 +249,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       btn.disabled = false;
     }
 
-    // Auto hide success message after 10 seconds
+    <?php if ($responseDetail): ?>
     window.onload = function () {
-      setTimeout(() => {
-        const responseBox = document.getElementById("response");
-        if (responseBox) {
-          responseBox.style.display = "none";
-        }
-      }, 10000);
+      const modal = new bootstrap.Modal(document.getElementById('successModal'));
+      modal.show();
     };
+    <?php endif; ?>
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
