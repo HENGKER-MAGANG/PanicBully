@@ -1,5 +1,5 @@
 <?php
-$host = 'localhost'; // atau bisa diganti sesuai IP internal/container
+$host = 'mysql-panicbully'; // atau bisa diganti sesuai IP internal/container
 $user = 'panicuser';
 $password = 'PanicUser@123';
 $database = 'default';
