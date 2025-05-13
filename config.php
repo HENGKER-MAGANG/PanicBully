@@ -1,14 +1,17 @@
 <?php
-session_start();
+$host = 'localhost'; // atau bisa diganti sesuai IP internal/container
+$user = 'panicuser';
+$password = 'PanicUser@123';
+$database = 'default';
 
-$host = getenv('DB_HOST') ?: 'localhost'; // default ke localhost jika env kosong
-$user = getenv('DB_USER') ?: 'root';
-$pass = getenv('DB_PASS') ?: '';
-$db   = getenv('DB_NAME') ?: 'panicbully';
+// Membuat koneksi
+$conn = mysqli_connect($host, $user, $password, $database);
 
-$conn = new mysqli($host, $user, $pass, $db);
-
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
+// Mengecek koneksi
+if (!$conn) {
+    die("Koneksi ke database gagal: " . mysqli_connect_error());
 }
+
+// Jika perlu debug sukses koneksi:
+// echo "Koneksi ke database berhasil!";
 ?>
