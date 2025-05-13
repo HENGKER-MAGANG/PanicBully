@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       z-index: 1000;
     }
@@ -89,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     .header-title {
       font-size: 1.75rem;
       font-weight: 700;
-      flex: 1;
       text-align: center;
       min-width: 200px;
       color: #ffffff;
@@ -171,43 +170,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     }
 
     @media (max-width: 576px) {
-      .header {
-        flex-direction: row;
-        justify-content: center;
-      }
-
       .logo {
         height: 40px;
-        margin: 5px;
       }
 
       .header-title {
-        order: 1;
-        width: 100%;
-        font-size: 1.3rem;
-        text-align: center;
-        margin: 0.5rem 0;
+        font-size: 1.2rem;
+        white-space: nowrap;
       }
 
-      h2 {
-        font-size: 1.3rem;
-      }
-
-      p {
-        font-size: 0.95rem;
+      .header {
+        flex-wrap: nowrap;
+        justify-content: space-between;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header Responsive -->
-  <header class="header d-flex justify-content-between align-items-center flex-wrap px-3">
+  <!-- Header -->
+  <header class="header d-flex align-items-center justify-content-between px-3">
     <img src="assets/logo-sulsel.png" class="logo me-3" alt="Logo Sulsel">
-    <div class="header-title text-center flex-grow-1 my-2 my-md-0">
-      <i class="fa-solid fa-bell"></i> Panic Bully Button
+    <div class="d-flex align-items-center flex-grow-1 justify-content-center">
+      <div class="header-title text-center">
+        <i class="fa-solid fa-bell"></i> Panic Bully Button
+      </div>
+      <img src="assets/logo_smkn2pinrang.png" class="logo ms-3" alt="Logo SMKN 2 Pinrang">
     </div>
-    <img src="assets/logo_smkn2pinrang.png" class="logo ms-3" alt="Logo SMKN 2 Pinrang">
   </header>
 
   <main>
@@ -232,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['latitude']) && isset(
     function getLocation() {
       Swal.fire({
         title: 'Konfirmasi Laporan',
-        text: "❗ Apakah Anda yakin ingin mengirim laporan bullying sekarang?",
+        text: "❗ Apakah laporan anda benar benar  urgent? jika tidak silahkan gunakan fitur chat laporan!!!",
         icon: 'warning',
         showCancelButton: false,
         confirmButtonText: 'Kirim Laporan Sekarang',
