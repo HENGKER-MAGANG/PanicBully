@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../config.php';
+include 'config.php';
 
 $token = "mrDCnGqnLfihKSXNbsfh"; 
 $target = "6282261325895,6282349273941,6285241419991"; 
