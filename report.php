@@ -3,7 +3,7 @@ session_start();
 include 'config.php';
 
 $token = "mrDCnGqnLfihKSXNbsfh";
-$target = "6282261325895,6282349273941,6285241419991";
+$target = "628114128485,6282349273941,6285241419991";
 $responseDetail = '';
 $errorDetail = '';
 
